@@ -1,7 +1,9 @@
-package com.example.songtolyrics;
+package com.example.songtolyrics.Controler;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.songtolyrics.R;
 
 public class EnregistrementActivity extends AppCompatActivity {
 

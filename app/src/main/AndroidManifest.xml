@@ -12,10 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ListMusicActivity"></activity>
-        <activity android:name=".HistoriqueActivity" />
-        <activity android:name=".EnregistrementActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".Controler.ListMusicActivity"></activity>
+        <activity android:name=".Controler.HistoriqueActivity" />
+        <activity android:name=".Controler.EnregistrementActivity" />
+        <activity android:name=".Controler.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

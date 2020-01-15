@@ -14,4 +14,6 @@
     <string name="historique_txt_musique">Musique</string>
     <string name="historique_txt_artiste">Artiste</string>
     <string name="historique_menu">Accueil</string>
+
+    <string name="autorisation_acces_memoire_refuse">Accès mémoire refusé</string>
 </resources>

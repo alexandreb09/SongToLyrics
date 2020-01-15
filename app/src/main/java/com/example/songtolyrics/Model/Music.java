@@ -1,4 +1,4 @@
-package Entity;
+package com.example.songtolyrics.Model;
 
 public class Music {
     private String title;

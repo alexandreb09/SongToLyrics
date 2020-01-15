@@ -1,31 +1,40 @@
-package com.example.songtolyrics;
+package com.example.songtolyrics.Controler;
 
-import android.app.ListActivity;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+
 import java.util.ArrayList;
 
-import Entity.Music;
+import com.example.songtolyrics.Model.Music;
+import com.example.songtolyrics.R;
+import com.example.songtolyrics.View.MusicAdapter;
+import com.example.songtolyrics.View.SimpleDividerItemDecoration;
 
-public class ListMusicActivity extends ListActivity {
+public class ListMusicActivity extends AppCompatActivity {
+
+    MusicAdapter mAdapter;
+    RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Create a MusicAdapter instance
-        MusicAdapter myAdapter = new MusicAdapter(this, R.layout.song);                      // Déclaration myAdapter
+        setContentView(R.layout.activity_list_music);
 
         // Read music from telephone (artist and title)
         ArrayList<Music> songList = readSong();
 
-        // Fill the adapter with music list
-        myAdapter.setMusicList(songList);
+        // RECYCLER VIEW
+        mRecyclerView           = findViewById(R.id.historique_act_historique_recycler_view);
+        mAdapter                = new MusicAdapter(this, songList);
 
-        // Display adapter
-        setListAdapter(myAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));
+        mRecyclerView.setAdapter(mAdapter);
     }
 
 
