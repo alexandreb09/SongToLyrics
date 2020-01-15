@@ -1,6 +1,6 @@
 package com.example.songtolyrics;
-
 import android.content.Intent;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,13 +15,13 @@ public class HistoriqueActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historique);
 
-//        menuBtn = findViewById(R.id.historique_btn_menu);
-//        menuBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);      // Création nouvelle intent
-//                startActivity(mainActivity);                                                        // Lancement nouvelle activité
-//            }
-//        });
+        menuBtn = findViewById(R.id.historique_btn_menu);
+        menuBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);      // Création nouvelle intent
+                startActivity(mainActivity);                                                        // Lancement nouvelle activité
+            }
+        });
     }
 }
