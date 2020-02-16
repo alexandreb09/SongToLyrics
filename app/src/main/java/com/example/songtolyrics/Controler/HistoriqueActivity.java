@@ -1,5 +1,4 @@
 package com.example.songtolyrics.Controler;
-import android.content.Intent;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,8 +20,7 @@ public class HistoriqueActivity extends AppCompatActivity {
         menuBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);      // Création nouvelle intent
-                startActivity(mainActivity);                                                        // Lancement nouvelle activité
+                finish();
             }
         });
     }

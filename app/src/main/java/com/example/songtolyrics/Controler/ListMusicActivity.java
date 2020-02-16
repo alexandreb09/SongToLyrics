@@ -7,8 +7,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import com.example.songtolyrics.Model.Music;
 import com.example.songtolyrics.R;
@@ -19,6 +22,7 @@ public class ListMusicActivity extends AppCompatActivity {
 
     MusicAdapter mAdapter;
     RecyclerView mRecyclerView;
+    Button accueilBtn ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,12 +33,21 @@ public class ListMusicActivity extends AppCompatActivity {
         ArrayList<Music> songList = readSong();
 
         // RECYCLER VIEW
-        mRecyclerView           = findViewById(R.id.historique_act_historique_recycler_view);
+        mRecyclerView           = findViewById(R.id.list_music_recycler_view);
         mAdapter                = new MusicAdapter(this, songList);
+        accueilBtn              = findViewById(R.id.list_music_menu_button);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));
         mRecyclerView.setAdapter(mAdapter);
+
+        // Return homepage
+        accueilBtn .setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
 
@@ -64,7 +77,7 @@ public class ListMusicActivity extends AppCompatActivity {
         if (musicCursor != null) {
             musicCursor.close();
         }
-
+        Collections.sort(songList);
         return songList;
     }
 }

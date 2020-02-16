@@ -15,7 +15,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
 import com.example.songtolyrics.R;
+
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     Button btn_nouvelle_recherche;
     Button btn_historique;
     Button btn_listMusique;
+
+    SpotifyAPI spotifyAPI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +80,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(historique);                                                      // Lancement nouvelle activité
             }
         });
+
+        try {
+            spotifyAPI = new SpotifyAPI(this);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+//        Toast.makeText(this, spotifyAPI.getData("hello"), Toast.LENGTH_LONG).show();
     }
 
     /**
