@@ -1,4 +1,4 @@
-package com.example.songtolyrics.Controler;
+package com.example.songtolyrics.controler;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

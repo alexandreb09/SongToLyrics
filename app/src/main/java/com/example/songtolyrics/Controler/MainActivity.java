@@ -1,4 +1,4 @@
-package com.example.songtolyrics.Controler;
+package com.example.songtolyrics.controler;
 
 import android.Manifest;
 import android.content.Intent;
@@ -15,13 +15,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.songtolyrics.R;
-
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -31,17 +26,17 @@ public class MainActivity extends AppCompatActivity {
     Button btn_nouvelle_recherche;
     Button btn_historique;
     Button btn_listMusique;
-
-    SpotifyAPI spotifyAPI;
+    Button btn_lyrics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btn_nouvelle_recherche = findViewById(R.id.homepage_btn_record);
-        btn_historique = findViewById(R.id.homepage_btn_historique);
-        btn_listMusique = findViewById(R.id.homepage_btn_show_musics);
+        btn_nouvelle_recherche  = findViewById(R.id.homepage_btn_record);
+        btn_historique          = findViewById(R.id.homepage_btn_historique);
+        btn_listMusique         = findViewById(R.id.homepage_btn_show_musics);
+        btn_lyrics              = findViewById(R.id.homepage_btn_search_lyrics);
 
 
         btn_nouvelle_recherche.setOnClickListener(new View.OnClickListener() {
@@ -76,18 +71,18 @@ public class MainActivity extends AppCompatActivity {
         btn_historique.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent historique = new Intent(getApplicationContext(), HistoriqueActivity.class); // Création nouvelle intent
-                startActivity(historique);                                                      // Lancement nouvelle activité
+                Intent historique = new Intent(getApplicationContext(), HistoriqueActivity.class);  // Création nouvelle intent
+                startActivity(historique);                                                          // Lancement nouvelle activité
             }
         });
 
-        try {
-            spotifyAPI = new SpotifyAPI(this);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-//        Toast.makeText(this, spotifyAPI.getData("hello"), Toast.LENGTH_LONG).show();
+        btn_lyrics.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent lyrics = new Intent(getApplicationContext(), LyricsActivity.class);          // Création nouvelle intent
+                startActivity(lyrics);                                                              // Lancement nouvelle activité
+            }
+        });
     }
 
     /**

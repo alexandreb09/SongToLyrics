@@ -1,4 +1,4 @@
-package com.example.songtolyrics.Controler;
+package com.example.songtolyrics.controler;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
