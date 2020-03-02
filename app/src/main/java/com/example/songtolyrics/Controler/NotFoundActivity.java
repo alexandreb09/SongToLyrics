@@ -1,15 +1,14 @@
 package com.example.songtolyrics.controler;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 import android.os.Bundle;
 
 import com.example.songtolyrics.R;
 
-public class EnregistrementActivity extends AppCompatActivity {
-
+public class NotFoundActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_enregistrement);
+        setContentView(R.layout.activity_notfound);
     }
 }

@@ -4,7 +4,6 @@ package com.example.songtolyrics.Model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-
 public class Track {
 
     @SerializedName("name")
@@ -60,6 +59,4 @@ public class Track {
     public void setLang(Lang lang) {
         this.lang = lang;
     }
-
-
 }

@@ -92,6 +92,4 @@ public class Result {
         Track chanson = getTrack();
         return chanson.getText();
     }
-
-
 }

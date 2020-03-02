@@ -3,11 +3,12 @@
 
     <string name="homepage_title">Bienvenue!</string>
     <string name="homepage_sub_title">Retrouvez facilement les paroles des vos chansons préférées.</string>
-    <string name="homepage_record">Enregistrer</string>
-    <string name="homepage_search_lyrics">Recherche lyrics</string>
-    <string name="homepage_btn_show_musics">Liste musiques</string>
+    <string name="homepage_record">Reconnaître une chanson</string>
+    <string name="homepage_search_lyrics">Rechercher paroles</string>
+    <string name="homepage_btn_show_musics">Musiques locales</string>
     <string name="homepage_record_search_lyrics">Enregistrer et cherche lyrics</string>
     <string name="homepage_historique">Historique</string>
+    <string name="homepage_recherche_description">Effectuer une recherche depuis:</string>
 
     <string name="historique_txt_title">Historique</string>
     <string name="historique_txt_date">Date</string>

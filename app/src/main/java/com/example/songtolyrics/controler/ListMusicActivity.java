@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 import com.example.songtolyrics.Model.Music;
 import com.example.songtolyrics.R;
@@ -22,7 +23,12 @@ public class ListMusicActivity extends AppCompatActivity {
 
     MusicAdapter mAdapter;
     RecyclerView mRecyclerView;
-    Button accueilBtn ;
+    Button mAccueilBtn;
+    Button mSortSongBtn;
+    Button mSortArtistesBtn;
+
+    Boolean artistOrder;
+    Boolean songOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,22 +36,60 @@ public class ListMusicActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_music);
 
         // Read music from telephone (artist and title)
-        ArrayList<Music> songList = readSong();
+        final ArrayList<Music> songList = readSong();
 
         // RECYCLER VIEW
         mRecyclerView           = findViewById(R.id.list_music_recycler_view);
         mAdapter                = new MusicAdapter(this, songList);
-        accueilBtn              = findViewById(R.id.list_music_menu_button);
+        mAccueilBtn             = findViewById(R.id.list_music_menu_button);
+        mSortSongBtn            = findViewById(R.id.list_music_music_order_button);
+        mSortArtistesBtn        = findViewById(R.id.list_music_artist_order_button);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));
         mRecyclerView.setAdapter(mAdapter);
 
+
+
         // Return homepage
-        accueilBtn .setOnClickListener(new View.OnClickListener() {
+        mAccueilBtn .setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        // Init artist order
+        songOrder = false;
+        // Update sort order from song
+        mSortSongBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Collections.sort(songList);
+                if (songOrder){
+                    Collections.reverse(songList);
+                }
+                songOrder = !songOrder;
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+
+        // Init artist order
+        artistOrder = false;
+        // Update sort order from artist
+        mSortArtistesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Collections.sort(songList, new Comparator<Music>(){
+                    public int compare(Music m1, Music m2) {
+                        return m1.getArtist().compareToIgnoreCase(m2.getArtist()); // To compare string values
+                    }
+                });
+                if (artistOrder){
+                    Collections.reverse(songList);
+                }
+                artistOrder = !artistOrder;
+                mAdapter.notifyDataSetChanged();
             }
         });
     }

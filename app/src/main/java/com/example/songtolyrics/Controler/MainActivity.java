@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         btn_nouvelle_recherche.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent nouvelle_recherche = new Intent(getApplicationContext(), EnregistrementActivity.class); // Création nouvelle intent
+                Intent nouvelle_recherche = new Intent(getApplicationContext(), ReccordActivity.class); // Création nouvelle intent
                 startActivity(nouvelle_recherche);                                                      // Lancement nouvelle activité
             }
         });
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         btn_historique.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent historique = new Intent(getApplicationContext(), HistoriqueActivity.class);  // Création nouvelle intent
+                Intent historique = new Intent(getApplicationContext(), HistoricActivity.class);  // Création nouvelle intent
                 startActivity(historique);                                                          // Lancement nouvelle activité
             }
         });

@@ -5,10 +5,10 @@ import android.os.Bundle;
 
 import com.example.songtolyrics.R;
 
-public class ErreurActivity extends Activity {
+public class ErrorActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.erreurlayout);
+        setContentView(R.layout.activity_error);
     }
 }

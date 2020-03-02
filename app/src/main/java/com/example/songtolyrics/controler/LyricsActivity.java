@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -21,79 +20,88 @@ import com.example.songtolyrics.Model.Example;
 import com.example.songtolyrics.R;
 import com.google.gson.Gson;
 
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 
 public class LyricsActivity extends AppCompatActivity {
 
-    EditText songName;
-    EditText artistName;
-    TextView responseView;
-    ProgressBar progressBar;
-    ImageView imageView;
     static final String API_KEY = "veVIEjZjElfDNV4XmWIsraUP9Cuu6Otfp5AUyKQVTG0E1Xx9xMFFDwR7odUzEbAW";
     static final String API_URL = "https://orion.apiseeds.com/api/music/lyric/";
 
+    EditText mSongName;
+    EditText mArtistName;
+    TextView mResponseView;
+    ProgressBar mProgressBar;
+    Button mQueryButton;
+
+    RetrieveFeedTask runningTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recherche_paroles);
 
-        responseView = (TextView) findViewById(R.id.responseView);
-        songName = (EditText) findViewById(R.id.songName);
-        artistName = (EditText) findViewById(R.id.artistName);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mResponseView = findViewById(R.id.responseView);
+        mSongName = findViewById(R.id.songName);
+        mArtistName = findViewById(R.id.artistName);
+        mProgressBar = findViewById(R.id.progressBar);
 
-        Button queryButton = (Button) findViewById(R.id.queryButton);
-        queryButton.setOnClickListener(new View.OnClickListener() {
+        mQueryButton = findViewById(R.id.queryButton);
+
+        mQueryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent myIntent = new Intent(LyricsActivity.this, ErrorActivity.class);
 
+                String song = mSongName.getText().toString();
+                String artist = mArtistName.getText().toString();
 
-                    Intent myIntent = new Intent(LyricsActivity.this, ErreurActivity.class);
+                if (!TextUtils.isEmpty(song) && !TextUtils.isEmpty(artist)) {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    mResponseView.setText("");
 
-                    String str1 = LyricsActivity.this.songName.getText().toString();
-                    String str2 = LyricsActivity.this.artistName.getText().toString();
-                    if (!TextUtils.isEmpty(str1) && !TextUtils.isEmpty(str2))
-                    {
-                        new RetrieveFeedTask().execute();
-                        return;
-                    }
-                    if (TextUtils.isEmpty(str1) || TextUtils.isEmpty(str2))
-
-
-                        startActivity(myIntent);
-                        progressBar.setVisibility(View.GONE);
-
+                    runningTask = new RetrieveFeedTask(song, artist, LyricsActivity.this);
+                    runningTask.execute();
                 }
+                else if (TextUtils.isEmpty(song) || TextUtils.isEmpty(artist)){
+                    startActivity(myIntent);
+                    mProgressBar.setVisibility(View.GONE);
+                }
+            }
         });
     }
 
-    class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Cancel running task(s) to avoid memory leaks
+        if (runningTask != null)
+            runningTask.cancel(true);
+    }
 
-        private Exception exception;
+
+    static class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
         String song;
         String artist;
-        protected void onPreExecute()
-        {
-            song = songName.getText().toString();
-            artist = artistName.getText().toString();
-            progressBar.setVisibility(View.VISIBLE);
-            responseView.setText("");
 
+        private WeakReference<LyricsActivity> activityReference;
 
+        RetrieveFeedTask(String s, String a, LyricsActivity context){
+            song = s;
+            artist = a;
+
+            activityReference = new WeakReference<>(context);
+        }
+
+        protected void onPreExecute() {
         }
 
         protected String doInBackground(Void... urls) {
-            //String email = emailText.getText().toString();
-            // Do some validation here
-
+            // Do some validation
             try {
 
                 URL url = new URL(API_URL + artist + "/" + song + "?" +"apikey=" + API_KEY);
@@ -119,33 +127,33 @@ public class LyricsActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(String response) {
-            if(response == null)
-            {
-                Intent myIntent = new Intent(LyricsActivity.this, NonTrouveActivity.class);
-                startActivity(myIntent);
-                progressBar.setVisibility(View.GONE);
-                return;
+            // get a reference to the activity if it is still there
+            LyricsActivity activity = activityReference.get();
 
+            // Check the current activity is still running
+            if (!(activity == null || activity.isFinishing())){
 
+                ProgressBar progressBar = activity.findViewById(R.id.progressBar);
+                TextView responseView  = activity.findViewById(R.id.responseView);
+
+                // Check response content
+                if(response == null) {
+                    Intent myIntent = new Intent(activity, NotFoundActivity.class);
+                    activity.startActivity(myIntent);
+
+                    progressBar.setVisibility(View.GONE);
+                }
+                // If response isn't null <=> lyrics found
+                else {
+                    progressBar.setVisibility(View.GONE);
+                    Log.i("INFO", response);
+
+                    Gson gson = new Gson();
+                    Example object = gson.fromJson(response, Example.class);
+                    responseView.setText(object.toString());
+                }
             }
-            else
-            {
-
-
-                progressBar.setVisibility(View.GONE);
-                Log.i("INFO", response);
-
-
-
-                JSONObject jsonObject = null;
-                Gson gson = new Gson();
-                Example object = gson.fromJson(response, Example.class);
-                responseView.setText(object.toString());
-
-
-
-
-
-            }}
-}}
+        }
+    }
+}
 

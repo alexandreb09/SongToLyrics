@@ -29,6 +29,8 @@
         app:layout_constraintTop_toBottomOf="@+id/homepage_txt_title" />
 
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,6 +40,15 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         >
+
+        <!-- Description-->
+        <TextView
+            android:id="@+id/homepage_txt_recherche_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/homepage_recherche_description"
+            android:textSize="20sp"
+            />
 
         <!--Nouvelle action-->
         <Button
@@ -56,13 +67,13 @@
             android:textSize="18sp"
             />
 
-        <Button
-            android:id="@+id/homepage_btn_record_search_lyrics"
-            android:text="@string/homepage_record_search_lyrics"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:textSize="18sp"
-            />
+<!--        <Button-->
+<!--            android:id="@+id/homepage_btn_record_search_lyrics"-->
+<!--            android:text="@string/homepage_record_search_lyrics"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:textSize="18sp"-->
+<!--            />-->
 
         <Button
             android:id="@+id/homepage_btn_show_musics"

@@ -7,14 +7,14 @@ import android.widget.Button;
 
 import com.example.songtolyrics.R;
 
-public class HistoriqueActivity extends AppCompatActivity {
+public class HistoricActivity extends AppCompatActivity {
 
     Button menuBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_historique);
+        setContentView(R.layout.activity_historic);
 
         menuBtn = findViewById(R.id.historique_btn_menu);
         menuBtn.setOnClickListener(new View.OnClickListener() {

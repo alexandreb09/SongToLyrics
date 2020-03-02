@@ -1,14 +1,15 @@
 package com.example.songtolyrics.controler;
 
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.songtolyrics.R;
 
-public class NonTrouveActivity extends Activity {
+public class ReccordActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.nontrouvelayout);
+        setContentView(R.layout.activity_reccord);
     }
 }
