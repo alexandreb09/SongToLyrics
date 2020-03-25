@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import android.support.v7.app.AppCompatActivity;
 
-import com.example.songtolyrics.Model.Example;
+import com.example.songtolyrics.model.Example;
 import com.example.songtolyrics.R;
 import com.google.gson.Gson;
 
@@ -39,11 +39,12 @@ public class LyricsActivity extends AppCompatActivity {
     Button mQueryButton;
 
     RetrieveFeedTask runningTask;
+    Bundle mExtras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recherche_paroles);
+        setContentView(R.layout.activity_lyrics);
 
         mResponseView = findViewById(R.id.responseView);
         mSongName = findViewById(R.id.songName);
@@ -52,24 +53,33 @@ public class LyricsActivity extends AppCompatActivity {
 
         mQueryButton = findViewById(R.id.queryButton);
 
+        mExtras = getIntent().getExtras();                                                          // Données de l'activité précédente
+        if (null != mExtras){
+            mArtistName.setText(mExtras.getString("artist"));
+            mSongName.setText(mExtras.getString("title"));
+        }
+
+
         mQueryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(LyricsActivity.this, ErrorActivity.class);
-
                 String song = mSongName.getText().toString();
                 String artist = mArtistName.getText().toString();
 
-                if (!TextUtils.isEmpty(song) && !TextUtils.isEmpty(artist)) {
+
+                if (TextUtils.isEmpty(song)){
+                    mSongName.setError( "Veuillez saisir le nom de la chanson" );
+                }
+
+                else if (TextUtils.isEmpty(artist)){
+                    mArtistName.setError( "Veuillez saisir le nom de l'artiste" );
+                }
+                else{
                     mProgressBar.setVisibility(View.VISIBLE);
                     mResponseView.setText("");
 
                     runningTask = new RetrieveFeedTask(song, artist, LyricsActivity.this);
                     runningTask.execute();
-                }
-                else if (TextUtils.isEmpty(song) || TextUtils.isEmpty(artist)){
-                    startActivity(myIntent);
-                    mProgressBar.setVisibility(View.GONE);
                 }
             }
         });

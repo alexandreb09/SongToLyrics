@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.songtolyrics">
+    package="com.example.songtolyrics"
+    >
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:allowBackup="true"
@@ -14,22 +17,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="m">
 
-        <activity android:name=".controler.ListMusicActivity" />
-        <activity android:name=".controler.HistoricActivity" />
-        <activity android:name=".controler.ReccordActivity" />
         <activity android:name=".controler.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:label="Paroles non trouvées" android:name=".controler.LyricsActivity"/>
-        <activity android:label="Erreur" android:name=".controler.ErrorActivity"/>
-        <activity android:label="Paroles non trouvées" android:name=".controler.NotFoundActivity"/>
+        <activity android:name=".controler.ListMusicActivity" />
+        <activity android:name=".controler.HistoricActivity" />
+        <activity android:name=".controler.ReccordActivity" />
+        <activity android:name=".controler.LyricsActivity"/>
+        <activity android:name=".controler.SpotifyConnectActivity"/>
+        <activity android:name=".controler.SpotifyListMusics"/>
+        <activity android:name=".controler.NotFoundActivity" android:label="Paroles non trouvées" />
 
     </application>
 

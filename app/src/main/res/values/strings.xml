@@ -13,7 +13,21 @@
     <string name="historique_txt_title">Historique</string>
     <string name="historique_txt_date">Date</string>
 
-    <string name="lis_music_txt_title">Liste musiques</string>
+    <string name="list_music_txt_title">Liste musiques</string>
+
+    <string name="audio_reccord_reccord_start_btn">Enregistrer</string>
+    <string name="audio_reccord_reccord_end_btn">Fin</string>
+    <string name="audio_reccord_play_start_btn">Lire</string>
+    <string name="audio_reccord_play_end_btn">Arrêter</string>
+
+    <string name="search_lyrics_title">Recherche parole</string>
+    <string name="search_lyrics_title_field">Entrez le titre de la chanson</string>
+    <string name="search_lyrics_author_field">Entrez le nom du chanteur</string>
+    <string name="search_lyrics_title_search_btn">Rechercher</string>
+
+    <string name="not_found_title">Aucun son trouvé</string>
+    <string name="not_found_message">Paroles non trouvées veuillez vérifier le nom de l\'artiste ou le nom de la chanson, ou peut-être que cette chanson n\'est pas dans notre base</string>
+    <string name="not_found_image_description">Smiley image non trouvé</string>
 
     <string name="txt_musique">Musique</string>
     <string name="txt_artiste">Artiste</string>

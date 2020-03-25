@@ -2,27 +2,39 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/erreur"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_margin="10sp"
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="128dp" />
-
-    <TextView
-        android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="@string/not_found_title"
         android:gravity="center"
-        android:textSize="25sp"
+        android:textSize="30sp"
+        android:layout_margin="10sp"
         android:textStyle="bold"
-        android:text="Paroles non trouvées veuillez vérifier le nom de l'artiste ou le nom de la chanson, ou peut-être que cette chanson n'est pas dans notre base"/>
 
-    <ImageView
-        android:src="@drawable/dono"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_gravity="center"/>
+        />
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:text="@string/not_found_message"
+            android:drawableBottom="@drawable/dono"
+            />
+    </LinearLayout>
 
 </LinearLayout>

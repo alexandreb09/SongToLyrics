@@ -82,6 +82,15 @@
             android:layout_width="match_parent"
             android:textSize="18sp"
             />
+
+        <Button
+            android:id="@+id/homepage_btn_spotify_connect"
+            android:text="Spotify"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:textSize="18sp"
+            />
+
     </LinearLayout>
 
 
