@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
 
-import static com.example.songtolyrics.controler.Parameters.API_PYTHON_FILENAME;
+import static com.example.songtolyrics.Parameters.API_PYTHON_FILENAME;
 
 
 public class Utils {

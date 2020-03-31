@@ -38,34 +38,17 @@ public class MusicAdapter extends RecyclerView.Adapter<MyHolder> {
         holder.title.setText(music.getTitle());                                           // Insertion texte dans cellules RecyclerView
         holder.artist.setText(music.getArtist());
 
-        holder.setItemClickListener(new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int pos) {                                              // Lors du click sur l'item
-//                new AlertDialog.Builder(mContext)                                                   // Create alertDialog
-//                    .setTitle("Patience")                                                           // set title
-//                    .setMessage("Il n'est pas encore possible d'afficher les paroles")              // set message
-//                    .setPositiveButton("Attendre", new DialogInterface.OnClickListener() {      // set positive button
-//                        @Override
-//                        public void onClick(DialogInterface dialogInterface, int i) {
-//                            Toast.makeText(mContext,
-//                                    "Merci de revenir plus tard",
-//                                    Toast.LENGTH_LONG
-//                            ).show();
-//                        }
-//                    })
-//                    .show();
+        holder.setItemClickListener((v, pos) -> {                                                   // Lors du click sur l'item
+            // Add parameters to activity
+            Bundle b = new Bundle();
+            TextView t = v.findViewById(R.id.song_title);
+            b.putString("title", t.getText().toString());
+            TextView textViewArtist = v.findViewById(R.id.song_artist);
+            b.putString("artist", textViewArtist.getText().toString());
 
-                // Add parameters to activity
-                Bundle b = new Bundle();
-                TextView t = v.findViewById(R.id.song_title);
-                b.putString("title", t.getText().toString());
-                TextView textViewArtist = v.findViewById(R.id.song_artist);
-                b.putString("artist", textViewArtist.getText().toString());
-
-                Intent nouvelle_recherche = new Intent(mContext, LyricsActivity.class);             // Create new activity: search lyrics
-                nouvelle_recherche.putExtras(b);                                                    // Add parameters to activity
-                mContext.startActivity(nouvelle_recherche);                                         // Run activity
-            }
+            Intent nouvelle_recherche = new Intent(mContext, LyricsActivity.class);                 // Create new activity: search lyrics
+            nouvelle_recherche.putExtras(b);                                                        // Add parameters to activity
+            mContext.startActivity(nouvelle_recherche);                                             // Run activity
         });
 
     }

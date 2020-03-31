@@ -7,6 +7,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.songtolyrics.model.Artist;
+import com.example.songtolyrics.model.Music;
 import com.google.gson.Gson;
 import com.example.songtolyrics.model.Song;
 import com.example.songtolyrics.VolleyCallBack;
@@ -19,8 +21,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.songtolyrics.Parameters.SPOTIFY_URL_RECENTLY_PLAYED;
+
 public class SpotifySongService {
-    private ArrayList<Song> songs = new ArrayList<>();
+    private ArrayList<Music> musics = new ArrayList<>();
     private SharedPreferences sharedPreferences;
     private RequestQueue queue;
 
@@ -29,23 +33,35 @@ public class SpotifySongService {
         queue = Volley.newRequestQueue(context);
     }
 
-    public ArrayList<Song> getSongs() {
-        return songs;
+    public ArrayList<Music> getSongs() {
+        return musics;
     }
 
-    public ArrayList<Song> getRecentlyPlayedTracks(final VolleyCallBack callBack) {
-        String endpoint = "https://api.spotify.com/v1/me/player/recently-played";
+    public ArrayList<Music> getRecentlyPlayedTracks(final VolleyCallBack callBack) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, endpoint, null, response -> {
+                (Request.Method.GET, SPOTIFY_URL_RECENTLY_PLAYED, null, response -> {
                     Gson gson = new Gson();
                     JSONArray jsonArray = response.optJSONArray("items");
                     for (int n = 0; n < jsonArray.length(); n++) {
                         try {
                             JSONObject object = jsonArray.getJSONObject(n);
-                            object = object.optJSONObject("track");
-                            Song song = gson.fromJson(object.toString(), Song.class);
-                            songs.add(song);
+                            JSONObject track = object.optJSONObject("track");
+
+                            // Search for songs
+                            Song song = gson.fromJson(track.toString(), Song.class);
+                            Music music = new Music(song);
+
+                            // Search for artists
+                            JSONArray artists = track.optJSONObject("album").optJSONArray("artists");
+                            if (artists.length() > 0){
+                                // Retrieve 1st artist
+                                String artist_str = artists.get(0).toString();
+                                music = new Music(song, gson.fromJson(artist_str, Artist.class));
+                            }
+
+                            musics.add(music);
                         } catch (JSONException e) {
+
                             e.printStackTrace();
                         }
                     }
@@ -64,42 +80,43 @@ public class SpotifySongService {
             }
         };
         queue.add(jsonObjectRequest);
-        return songs;
+
+        return musics;
     }
 
 
-    public void addSongToLibrary(Song song) {
-        JSONObject payload = preparePutPayload(song);
-        JsonObjectRequest jsonObjectRequest = prepareSongLibraryRequest(payload);
-        queue.add(jsonObjectRequest);
-    }
-
-    private JsonObjectRequest prepareSongLibraryRequest(JSONObject payload) {
-        return new JsonObjectRequest(Request.Method.PUT, "https://api.spotify.com/v1/me/tracks", payload, response -> {
-        }, error -> {
-        }
-        ) {
-            @Override
-            public Map<String, String> getHeaders() {
-                Map<String, String> headers = new HashMap<>();
-                String token = sharedPreferences.getString("token", "");
-                String auth = "Bearer " + token;
-                headers.put("Authorization", auth);
-                headers.put("Content-Type", "application/json");
-                return headers;
-            }
-        };
-    }
-
-    private JSONObject preparePutPayload(Song song) {
-        JSONArray idarray = new JSONArray();
-        idarray.put(song.getId());
-        JSONObject ids = new JSONObject();
-        try {
-            ids.put("ids", idarray);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return ids;
-    }
+//    public void addSongToLibrary(Song song) {
+//        JSONObject payload = preparePutPayload(song);
+//        JsonObjectRequest jsonObjectRequest = prepareSongLibraryRequest(payload);
+//        queue.add(jsonObjectRequest);
+//    }
+//
+//    private JsonObjectRequest prepareSongLibraryRequest(JSONObject payload) {
+//        return new JsonObjectRequest(Request.Method.PUT, "https://api.spotify.com/v1/me/tracks", payload, response -> {
+//        }, error -> {
+//        }
+//        ) {
+//            @Override
+//            public Map<String, String> getHeaders() {
+//                Map<String, String> headers = new HashMap<>();
+//                String token = sharedPreferences.getString("token", "");
+//                String auth = "Bearer " + token;
+//                headers.put("Authorization", auth);
+//                headers.put("Content-Type", "application/json");
+//                return headers;
+//            }
+//        };
+//    }
+//
+//    private JSONObject preparePutPayload(Song song) {
+//        JSONArray idarray = new JSONArray();
+//        idarray.put(song.getId());
+//        JSONObject ids = new JSONObject();
+//        try {
+//            ids.put("ids", idarray);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        return ids;
+//    }
 }

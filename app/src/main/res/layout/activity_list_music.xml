@@ -46,6 +46,13 @@
 
     </LinearLayout>
 
+    <ProgressBar
+        android:id="@+id/list_music_progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:gravity="center"
+        android:visibility="gone" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_music_recycler_view"
@@ -62,7 +69,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
 
         <Button
             style="@style/AppTheme"

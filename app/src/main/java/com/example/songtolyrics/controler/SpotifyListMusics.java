@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class SpotifyListMusics extends AppCompatActivity {
 
     private SpotifySongService songService;
-    private ArrayList<Song> recentlyPlayedTracks;
+    private ArrayList<Music> recentlyPlayedTracks;
 
     MusicAdapter mAdapter;
     RecyclerView mRecyclerView;
@@ -55,16 +55,16 @@ public class SpotifyListMusics extends AppCompatActivity {
         });
     }
 
-    private void displaySongs(ArrayList<Song> spotify_songs) {
+    private void displaySongs(ArrayList<Music> musics) {
 
         // Read music from telephone (artist and title)
-        final ArrayList<Music> songList = new ArrayList<>();
-        for (Song song: spotify_songs) {
-            songList.add( new Music(song.getName(), "Non disponible"));
-        }
+//        final ArrayList<Music> songList = new ArrayList<>();
+//        for (Song song: spotify_songs) {
+//            songList.add( new Music(song.getName(), "Non disponible"));
+//        }
 
         // RECYCLER VIEW
-        mAdapter                = new MusicAdapter(this, songList);
+        mAdapter                = new MusicAdapter(this, musics);
         mRecyclerView.setAdapter(mAdapter);
     }
 

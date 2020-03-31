@@ -10,18 +10,10 @@ public class Result {
     @SerializedName("artist")
     @Expose
     private Artist artist;
+
     @SerializedName("track")
     @Expose
     private Track track;
-    @SerializedName("copyright")
-    @Expose
-    private Copyright copyright;
-    @SerializedName("probability")
-    @Expose
-    private Integer probability;
-    @SerializedName("similarity")
-    @Expose
-    private Integer similarity;
 
     /**
      * No args constructor for use in serialization
@@ -31,20 +23,12 @@ public class Result {
     }
 
     /**
-     * 
-     * @param copyright
-     * @param artist
-     * @param probability
-     * @param similarity
      * @param track
      */
-    public Result(Artist artist, Track track, Copyright copyright, Integer probability, Integer similarity) {
+    public Result(Artist artist, Track track) {
         super();
         this.artist = artist;
         this.track = track;
-        this.copyright = copyright;
-        this.probability = probability;
-        this.similarity = similarity;
     }
 
     public Artist getArtist() {
@@ -61,30 +45,6 @@ public class Result {
 
     public void setTrack(Track track) {
         this.track = track;
-    }
-
-    public Copyright getCopyright() {
-        return copyright;
-    }
-
-    public void setCopyright(Copyright copyright) {
-        this.copyright = copyright;
-    }
-
-    public Integer getProbability() {
-        return probability;
-    }
-
-    public void setProbability(Integer probability) {
-        this.probability = probability;
-    }
-
-    public Integer getSimilarity() {
-        return similarity;
-    }
-
-    public void setSimilarity(Integer similarity) {
-        this.similarity = similarity;
     }
 
     @Override

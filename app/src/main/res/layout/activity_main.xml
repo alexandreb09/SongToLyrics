@@ -67,14 +67,6 @@
             android:textSize="18sp"
             />
 
-<!--        <Button-->
-<!--            android:id="@+id/homepage_btn_record_search_lyrics"-->
-<!--            android:text="@string/homepage_record_search_lyrics"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:textSize="18sp"-->
-<!--            />-->
-
         <Button
             android:id="@+id/homepage_btn_show_musics"
             android:text="@string/homepage_btn_show_musics"

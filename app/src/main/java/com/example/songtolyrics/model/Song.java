@@ -1,21 +1,16 @@
 package com.example.songtolyrics.model;
 
+import com.google.gson.annotations.SerializedName;
+
+import static com.example.songtolyrics.Parameters.NOT_AVAILABLE;
+
 public class Song {
 
-    private String id;
+    @SerializedName(value = "name", alternate = {"title"})
     private String name;
 
-    public Song(String id, String name) {
-        this.name = name;
-        this.id = id;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public Song() {
+        this.name = NOT_AVAILABLE;
     }
 
     public String getName() {

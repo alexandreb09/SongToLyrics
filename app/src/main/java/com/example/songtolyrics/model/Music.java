@@ -1,12 +1,33 @@
 package com.example.songtolyrics.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Music implements Comparable<Music>{
+    private final String NO_ARTISTS = "Non disponible";
+
+    @SerializedName(value="title")
     private String title;
+
+    @SerializedName(value="artist")
     private String artist;
 
     public Music(String title, String artist) {
         this.title = cleanTitle(title);
         this.artist = artist;
+    }
+
+    public Music(Song song, Artist artist) {
+        this.title = cleanTitle(song.getName());
+        this.artist = artist.getName();
+    }
+
+    public Music(Song song) {
+        this.title = cleanTitle(song.getName());
+        this.artist = NO_ARTISTS;
+    }
+    public Music() {
+        this.title = "";
+        this.artist = NO_ARTISTS;
     }
 
     public String getTitle(){

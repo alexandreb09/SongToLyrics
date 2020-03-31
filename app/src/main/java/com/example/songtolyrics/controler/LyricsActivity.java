@@ -16,9 +16,14 @@ import android.widget.TextView;
 
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.songtolyrics.model.Artist;
 import com.example.songtolyrics.model.Example;
 import com.example.songtolyrics.R;
+import com.example.songtolyrics.model.Lyrics;
 import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -60,27 +65,24 @@ public class LyricsActivity extends AppCompatActivity {
         }
 
 
-        mQueryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String song = mSongName.getText().toString();
-                String artist = mArtistName.getText().toString();
+        mQueryButton.setOnClickListener(v -> {
+            String song = mSongName.getText().toString();
+            String artist = mArtistName.getText().toString();
 
 
-                if (TextUtils.isEmpty(song)){
-                    mSongName.setError( "Veuillez saisir le nom de la chanson" );
-                }
+            if (TextUtils.isEmpty(song)){
+                mSongName.setError( "Veuillez saisir le nom de la chanson" );
+            }
 
-                else if (TextUtils.isEmpty(artist)){
-                    mArtistName.setError( "Veuillez saisir le nom de l'artiste" );
-                }
-                else{
-                    mProgressBar.setVisibility(View.VISIBLE);
-                    mResponseView.setText("");
+            else if (TextUtils.isEmpty(artist)){
+                mArtistName.setError( "Veuillez saisir le nom de l'artiste" );
+            }
+            else{
+                mProgressBar.setVisibility(View.VISIBLE);
+                mResponseView.setText("");
 
-                    runningTask = new RetrieveFeedTask(song, artist, LyricsActivity.this);
-                    runningTask.execute();
-                }
+                runningTask = new RetrieveFeedTask(song, artist, LyricsActivity.this);
+                runningTask.execute();
             }
         });
     }
@@ -144,12 +146,18 @@ public class LyricsActivity extends AppCompatActivity {
             if (!(activity == null || activity.isFinishing())){
 
                 ProgressBar progressBar = activity.findViewById(R.id.progressBar);
-                TextView responseView  = activity.findViewById(R.id.responseView);
 
                 // Check response content
                 if(response == null) {
-                    Intent myIntent = new Intent(activity, NotFoundActivity.class);
-                    activity.startActivity(myIntent);
+                    // Prepare extras for new activity
+                    Bundle b = new Bundle();
+                    b.putString("title", song);
+                    b.putString("artist", artist);
+
+                    // Start not found activity
+                    Intent not_found_activity = new Intent(activity, NotFoundActivity.class);
+                    not_found_activity.putExtras(b);
+                    activity.startActivity(not_found_activity);
 
                     progressBar.setVisibility(View.GONE);
                 }
@@ -159,8 +167,22 @@ public class LyricsActivity extends AppCompatActivity {
                     Log.i("INFO", response);
 
                     Gson gson = new Gson();
-                    Example object = gson.fromJson(response, Example.class);
-                    responseView.setText(object.toString());
+
+                    try {
+                        JSONObject jsonObject = new JSONObject(response).optJSONObject("result");
+
+                        JSONObject art = jsonObject.optJSONObject("artist");
+                        JSONObject track = jsonObject.optJSONObject("track");
+                        Artist artist = gson.fromJson(art.toString(), Artist.class);
+                        Lyrics lyrics = gson.fromJson(track.toString(), Lyrics.class);
+                        Example object = gson.fromJson(response, Example.class);
+
+
+                        TextView responseView  = activity.findViewById(R.id.responseView);
+                        responseView.setText(object.toString());
+                    }catch (JSONException err){
+                        Log.d("Error", err.toString());
+                    }
                 }
             }
         }

@@ -1,31 +1,13 @@
 
 package com.example.songtolyrics.model;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
 public class Artist {
 
-    @SerializedName("name")
-    @Expose
+    @SerializedName(value = "name", alternate = {"artist"})
     private String name;
-
-    /**
-     * No args constructor for use in serialization
-     * 
-     */
-    public Artist() {
-    }
-
-    /**
-     * 
-     * @param name
-     */
-    public Artist(String name) {
-        super();
-        this.name = name;
-    }
 
     public String getName() {
         return name;
@@ -34,7 +16,4 @@ public class Artist {
     public void setName(String name) {
         this.name = name;
     }
-
-
-
 }

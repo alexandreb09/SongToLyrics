@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/erreur"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10sp"
+    android:padding="10sp"
     android:orientation="vertical">
 
     <TextView
@@ -14,7 +15,6 @@
         android:textSize="30sp"
         android:layout_margin="10sp"
         android:textStyle="bold"
-
         />
 
 
@@ -35,6 +35,15 @@
             android:text="@string/not_found_message"
             android:drawableBottom="@drawable/dono"
             />
+
+        <Button
+            android:id="@+id/not_found_suggestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Voir suggestions"
+            android:background="@color/design_default_color_primary_dark"
+            />
+
     </LinearLayout>
 
 </LinearLayout>
