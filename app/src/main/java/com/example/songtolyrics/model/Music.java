@@ -11,6 +11,8 @@ public class Music implements Comparable<Music>{
     @SerializedName(value="artist")
     private String artist;
 
+    private boolean lyricsAvailable;
+
     public Music(String title, String artist) {
         this.title = cleanTitle(title);
         this.artist = artist;
@@ -40,6 +42,16 @@ public class Music implements Comparable<Music>{
     private String cleanTitle(String title){
         return title.replaceAll("\\(.*?\\)", "");
     }
+
+
+    public boolean isLyricsAvailable() {
+        return lyricsAvailable;
+    }
+
+    public void setLyricsAvailabe(boolean lyricsAvailable) {
+        this.lyricsAvailable = lyricsAvailable;
+    }
+
 
     @Override
     public int compareTo(Music o) {

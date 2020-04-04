@@ -11,6 +11,7 @@ import com.example.songtolyrics.model.Music;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import static com.example.songtolyrics.Parameters.API_PYTHON_FILENAME;
@@ -73,5 +74,23 @@ public class Utils {
             fileName = Environment.DIRECTORY_DOWNLOADS;
         }
         return fileName + ("/" + API_PYTHON_FILENAME);
+    }
+
+    /**
+     * Check if a previous research have been done. Return
+     *      - TRUE if song isn't available
+     *      - FALSE if song is available
+     * @param artist: artist name
+     * @param title: music title
+     * @param previousMusics: music search history
+     * @return boolean: if research must be done
+     */
+    public static boolean doResearch(String artist, String title, List<Music> previousMusics){
+        for (Music music : previousMusics){
+            if (music.getArtist().equals(artist) && music.getTitle().equals(title)){
+                return music.isLyricsAvailable();
+            }
+        }
+        return true;
     }
 }

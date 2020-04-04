@@ -3,6 +3,7 @@ package com.example.songtolyrics.controler;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -16,11 +17,13 @@ import android.widget.TextView;
 
 import android.support.v7.app.AppCompatActivity;
 
-import com.example.songtolyrics.model.Artist;
-import com.example.songtolyrics.model.Example;
+import com.example.songtolyrics.Parameters;
+import com.example.songtolyrics.Utils;
 import com.example.songtolyrics.R;
-import com.example.songtolyrics.model.Lyrics;
+import com.example.songtolyrics.model.Music;
+import com.example.songtolyrics.model.ResponseOrionLyrics;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,14 +31,14 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class LyricsActivity extends AppCompatActivity {
-
-    static final String API_KEY = "veVIEjZjElfDNV4XmWIsraUP9Cuu6Otfp5AUyKQVTG0E1Xx9xMFFDwR7odUzEbAW";
-    static final String API_URL = "https://orion.apiseeds.com/api/music/lyric/";
 
     EditText mSongName;
     EditText mArtistName;
@@ -45,6 +48,9 @@ public class LyricsActivity extends AppCompatActivity {
 
     RetrieveFeedTask runningTask;
     Bundle mExtras;
+
+    List<Music> mPreviousSearch;
+    SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,28 +70,36 @@ public class LyricsActivity extends AppCompatActivity {
             mSongName.setText(mExtras.getString("title"));
         }
 
+        // Load previous searched
+        mPreviousSearch =  getPreviousMusicSearched();
+
 
         mQueryButton.setOnClickListener(v -> {
             String song = mSongName.getText().toString();
             String artist = mArtistName.getText().toString();
 
-
+            // Check song field not empty
             if (TextUtils.isEmpty(song)){
                 mSongName.setError( "Veuillez saisir le nom de la chanson" );
             }
-
+            // Check artist field not empty
             else if (TextUtils.isEmpty(artist)){
                 mArtistName.setError( "Veuillez saisir le nom de l'artiste" );
             }
-            else{
+            // Check song+artist not already search without success
+            else if (Utils.doResearch(artist, song, mPreviousSearch)){
                 mProgressBar.setVisibility(View.VISIBLE);
                 mResponseView.setText("");
 
                 runningTask = new RetrieveFeedTask(song, artist, LyricsActivity.this);
                 runningTask.execute();
             }
+            else{
+                startNotFoundActivity(song, artist);
+            }
         });
     }
+
 
     @Override
     protected void onDestroy() {
@@ -93,6 +107,40 @@ public class LyricsActivity extends AppCompatActivity {
         // Cancel running task(s) to avoid memory leaks
         if (runningTask != null)
             runningTask.cancel(true);
+    }
+
+    /**
+     * Load previous usicSearch from history
+     * @return List<Music>: list of musics
+     */
+    private List<Music> getPreviousMusicSearched(){
+        mSharedPreferences = getBaseContext().getSharedPreferences(Parameters.DATA, MODE_PRIVATE);
+        List<Music> previousMusics = new ArrayList<>();
+
+        if (mSharedPreferences.contains(Parameters.PREVIOUS_SEARCH_RESULTS)) {
+            String jsonListProduit = mSharedPreferences.getString(Parameters.PREVIOUS_SEARCH_RESULTS, null);
+            Type type = new TypeToken< List < Music >>() {}.getType();
+            previousMusics = new Gson().fromJson(jsonListProduit, type);
+        }
+        return previousMusics;
+    }
+
+
+    /**
+     * Start not found activity
+     * @param song: song not found
+     * @param artist: artist not found
+     */
+    public void startNotFoundActivity(String song, String artist){
+        // Prepare extras for new activity
+        Bundle b = new Bundle();
+        b.putString("title", song);
+        b.putString("artist", artist);
+
+        // Start not found activity
+        Intent not_found_activity = new Intent(this, NotFoundActivity.class);
+        not_found_activity.putExtras(b);
+        startActivity(not_found_activity);
     }
 
 
@@ -115,8 +163,8 @@ public class LyricsActivity extends AppCompatActivity {
         protected String doInBackground(Void... urls) {
             // Do some validation
             try {
-
-                URL url = new URL(API_URL + artist + "/" + song + "?" +"apikey=" + API_KEY);
+                // Build URL
+                URL url = new URL(Parameters.ORION_API_URL_LYRICS + artist + "/" + song + "?" +"apikey=" + Parameters.ORION_API_KEY);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 try {
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -149,16 +197,10 @@ public class LyricsActivity extends AppCompatActivity {
 
                 // Check response content
                 if(response == null) {
-                    // Prepare extras for new activity
-                    Bundle b = new Bundle();
-                    b.putString("title", song);
-                    b.putString("artist", artist);
-
                     // Start not found activity
-                    Intent not_found_activity = new Intent(activity, NotFoundActivity.class);
-                    not_found_activity.putExtras(b);
-                    activity.startActivity(not_found_activity);
+                    activity.startNotFoundActivity(song, artist);
 
+                    // Hide progress bar
                     progressBar.setVisibility(View.GONE);
                 }
                 // If response isn't null <=> lyrics found
@@ -169,17 +211,13 @@ public class LyricsActivity extends AppCompatActivity {
                     Gson gson = new Gson();
 
                     try {
+                        // Get result from request
                         JSONObject jsonObject = new JSONObject(response).optJSONObject("result");
-
-                        JSONObject art = jsonObject.optJSONObject("artist");
-                        JSONObject track = jsonObject.optJSONObject("track");
-                        Artist artist = gson.fromJson(art.toString(), Artist.class);
-                        Lyrics lyrics = gson.fromJson(track.toString(), Lyrics.class);
-                        Example object = gson.fromJson(response, Example.class);
-
+                        // Unserialized result to a ResponseOrionLyrics object
+                        ResponseOrionLyrics responseOrion = gson.fromJson(jsonObject.toString(), ResponseOrionLyrics.class);
 
                         TextView responseView  = activity.findViewById(R.id.responseView);
-                        responseView.setText(object.toString());
+                        responseView.setText(responseOrion.getSong().getText());
                     }catch (JSONException err){
                         Log.d("Error", err.toString());
                     }

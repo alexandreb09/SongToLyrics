@@ -211,7 +211,7 @@ public class ReccordActivity extends AppCompatActivity {
         protected String doInBackground(Void... urls) {
             URL url;
             try {
-                url = new URL(API_PYTHON_URL + ":" + API_PYTHON_PORT + "/" + API_PYTHON_METHOD +"/");
+                url = new URL(API_PYTHON_URL + ":" + API_PYTHON_PORT + "/" + API_PYTHON_METHOD);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
                 return "";
@@ -271,7 +271,6 @@ public class ReccordActivity extends AppCompatActivity {
                 connection.setDoOutput(true);                                                       // Allow Outputs
                 connection.setUseCaches(false);                                                     // Don't use a cached Copy
                 connection.setRequestProperty("Connection", "Keep-Alive");
-                connection.setRequestMethod("GET");                                                 // API call in get
                 connection.setRequestProperty("ENCTYPE", "multipart/form-data");
                 connection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
                 connection.setRequestProperty("uploaded_file", filepath);

@@ -9,8 +9,11 @@ public class Song {
     @SerializedName(value = "name", alternate = {"title"})
     private String name;
 
+    private String text;
+
     public Song() {
         this.name = NOT_AVAILABLE;
+        this.text = "";
     }
 
     public String getName() {
@@ -21,4 +24,11 @@ public class Song {
         this.name = name;
     }
 
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 }
