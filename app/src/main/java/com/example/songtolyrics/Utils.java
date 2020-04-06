@@ -2,29 +2,39 @@ package com.example.songtolyrics;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.widget.Toast;
 
 import com.example.songtolyrics.model.Music;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.example.songtolyrics.Parameters.API_PYTHON_FILENAME;
+import static com.example.songtolyrics.Parameters.DATA;
+import static com.example.songtolyrics.Parameters.SIZE_MAX_HISTORY;
+import static com.example.songtolyrics.Parameters.SIZE_MAX_HISTORY_KEY;
+import static com.example.songtolyrics.Parameters.STORAGE_HISTORY;
 
 
 public class Utils {
 
     /**
      * Read all songs from Local Phone Storage
-     * @return list of songs (ArrayList<Music>)
+     * @return list of songs (List<Music>)
      */
-    public static ArrayList<Music> readSong(Context context){
-        ArrayList<Music> songList = new ArrayList<>();
+    public static List<Music> readSong(Context context){
+        List<Music> songList = new ArrayList<>();
 
         ContentResolver musicResolver = context.getContentResolver();
         Uri musicUri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
@@ -86,11 +96,133 @@ public class Utils {
      * @return boolean: if research must be done
      */
     public static boolean doResearch(String artist, String title, List<Music> previousMusics){
-        for (Music music : previousMusics){
-            if (music.getArtist().equals(artist) && music.getTitle().equals(title)){
-                return music.isLyricsAvailable();
+        if (null != previousMusics){
+            for (Music music : previousMusics){
+                if (music.isAlreadySearch() && music.getArtist().equals(artist) && music.getTitle().equals(title)){
+                    return music.isLyricsAvailable();
+                }
             }
         }
         return true;
+    }
+
+
+    /**
+     * Store the current list of musics (history)
+     * @param context: Application context
+     * @param musics_history: list of music to store
+     */
+    public static void storeMusicHistory(Context context, List<Music> musics_history){
+        SharedPreferences mSharedPreferences = context.getSharedPreferences(DATA, MODE_PRIVATE);
+        SharedPreferences.Editor listeEditor = mSharedPreferences.edit();
+
+        String jsonProduit = new Gson().toJson(musics_history);
+        listeEditor.putString(STORAGE_HISTORY, jsonProduit);
+        listeEditor.apply();
+    }
+
+    /**
+     * Get the history from storage
+     * @param context: application context
+     * @return list of musics: List<Music>
+     */
+    public static List<Music> restoreMusicHistory(Context context){
+        SharedPreferences mSharedPreferences = context.getSharedPreferences(DATA, MODE_PRIVATE);
+
+        Type type = new TypeToken<List<Music>>(){}.getType();
+        String jsonMusics = mSharedPreferences.getString(STORAGE_HISTORY, null);
+        List<Music> music = new Gson().fromJson(jsonMusics, type);
+        if (null == music) music = new ArrayList<>();
+        return music;
+    }
+
+
+    /**
+     * Check if the music already exists in the list
+     *      - Verification on artist name and song title
+     * @param list: list of musics
+     * @param music: music to search
+     * @return bolean: is music in list
+     */
+    public static boolean containsMusic(final List<Music> list, final Music music){
+        return indexMusic(list, music) < 0;
+    }
+
+    /**
+     * Return index of the music in the list
+     *      -> return -1 if not found
+     * @param list: list of musics
+     * @param music: music to search
+     * @return int: index of the music in list
+     */
+    public static int indexMusic(final List<Music> list, final Music music){
+        String title = music.getTitle(), artist = music.getArtist();
+        for (int i = 0; i < list.size(); ++i){
+            if (list.get(i).getTitle().equals(title) && list.get(i).getArtist().equals(artist)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Add the music to the lst of musics
+     * Check the new list music size wth the maximum allowed: if greater, last elements are remove
+     * @param context: Application context
+     * @param musics: list of musics
+     * @param music: new music to add
+     * @return the new list of musics
+     */
+    public static List<Music> addMusic(Context context, List<Music> musics, final Music music){
+        music.setAlreadySearch(true);
+        // Add music
+        musics.add(0, music);
+
+        // Read hstoric size from storage
+        SharedPreferences mSharedPreferences = context.getSharedPreferences(DATA, MODE_PRIVATE);
+        int size_max_historic = mSharedPreferences.getInt(SIZE_MAX_HISTORY_KEY, SIZE_MAX_HISTORY);
+        // If music list size greater than the max: remove last elements
+        if (musics.size() > size_max_historic){
+            musics = musics.subList(0, size_max_historic);
+        }
+        return musics;
+    }
+
+
+    /**
+     * Load history musics
+     * Update the musics from the history
+     * @param context: application context
+     * @param musics: list of musics to update
+     * @return list of musics updated
+     */
+    public static List<Music> updateLyrics(Context context, List<Music> musics){
+        List<Music> history_musics = Utils.restoreMusicHistory(context);
+        Music music;
+        if (null != history_musics){
+            for (Music history_music: history_musics){
+                for (int i = 0; i < musics.size(); ++i){
+                    music = musics.get(i);
+                    if (history_music.getArtist().equals(music.getArtist()) && history_music.getTitle().equals(music.getTitle())){
+                        music.setLyrics(history_music.getLyrics());
+                        music.setAlreadySearch(true);
+                        musics.set(i, music);
+                    }
+                }
+            }
+        }
+        return musics;
+    }
+
+    // ======================================================//
+    //                      TOAST ERROR                      //
+    // ======================================================//
+    public static void showToastError(Context context){
+        Utils.showToastError(context, context.getResources().getString(R.string.error_message_default));
+    }
+
+    public static void showToastError(Context context, String message){
+        Toast toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
+        toast.show();
     }
 }

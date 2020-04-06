@@ -1,23 +1,27 @@
 package com.example.songtolyrics.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class ResponseOrionSuggestion {
 
     private boolean success;
 
-    private List<Music> result;
 
-    public ResponseOrionSuggestion(boolean success, List<Music> result) {
+    @SerializedName(value = "result")
+    private List<Music> musics;
+
+    public ResponseOrionSuggestion(boolean success, List<Music> musics) {
         this.success = success;
-        this.result = result;
+        this.musics = musics;
     }
 
     public boolean isSuccess() {
         return success;
     }
 
-    public List<Music> getResult() {
-        return result;
+    public List<Music> getMusics() {
+        return musics;
     }
 }

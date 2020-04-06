@@ -61,7 +61,6 @@ public class SpotifySongService {
 
                             musics.add(music);
                         } catch (JSONException e) {
-
                             e.printStackTrace();
                         }
                     }

@@ -3,8 +3,8 @@ package com.example.songtolyrics.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +20,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MyHolder> {
     private Context mContext;
     private List<Music> mListMusic;
 
-    public MusicAdapter(Context context, List<Music> listeMusic){                                  // Création
+    public MusicAdapter(Context context, List<Music> listeMusic){                                   // Création
         this.mContext = context;
         this.mListMusic = listeMusic;
     }
@@ -34,9 +34,13 @@ public class MusicAdapter extends RecyclerView.Adapter<MyHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
-        Music music = mListMusic.get(position);                                         // Récupération produit concerné
-        holder.title.setText(music.getTitle());                                           // Insertion texte dans cellules RecyclerView
+        Music music = mListMusic.get(position);                                                     // Récupération produit concerné
+        holder.title.setText(music.getTitle());                                                     // Insertion texte dans cellules RecyclerView
         holder.artist.setText(music.getArtist());
+        holder.lyricsAvailable.setText(music.getLyricsAvailableString(this.mContext));
+        if (music.isLyricsAvailable()){
+            holder.lyricsAvailable.setTextColor(mContext.getResources().getColor(R.color.green));
+        }
 
         holder.setItemClickListener((v, pos) -> {                                                   // Lors du click sur l'item
             // Add parameters to activity

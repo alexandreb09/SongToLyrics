@@ -11,6 +11,10 @@ public class ResponseOrionLyrics {
     @SerializedName(value = "track")
     private Song song;
 
+    public ResponseOrionLyrics(String error_){
+        this.error = error_;
+    }
+
 
     // ============================================== //
     //              GETTER - SETTER                   //
@@ -40,7 +44,7 @@ public class ResponseOrionLyrics {
     }
 
     public boolean isValid(){
-        return error.isEmpty();
+        return null == error || error.isEmpty();
     }
 
 }

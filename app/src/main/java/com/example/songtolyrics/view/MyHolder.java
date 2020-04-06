@@ -1,6 +1,6 @@
 package com.example.songtolyrics.view;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -11,12 +11,14 @@ public class MyHolder extends RecyclerView.ViewHolder implements View.OnClickLis
     private ItemClickListener itemClickListener;
     TextView title;
     TextView artist;
+    TextView lyricsAvailable;
 
     public MyHolder(View itemView) {
         super(itemView);
 
-        title          = itemView.findViewById(R.id.song_title);
-        artist         = itemView.findViewById(R.id.song_artist);
+        title           = itemView.findViewById(R.id.song_title);
+        artist          = itemView.findViewById(R.id.song_artist);
+        lyricsAvailable = itemView.findViewById(R.id.song_lyrics_available);
 
         itemView.setOnClickListener(this);
     }
@@ -27,6 +29,6 @@ public class MyHolder extends RecyclerView.ViewHolder implements View.OnClickLis
     }
 
     public void setItemClickListener(ItemClickListener itemClickListener)    {
-        this.itemClickListener=itemClickListener;
+        this.itemClickListener = itemClickListener;
     }
 }

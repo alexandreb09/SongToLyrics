@@ -4,10 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +20,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import com.example.songtolyrics.Parameters;
 import com.example.songtolyrics.model.Music;
@@ -58,8 +59,8 @@ public class ListMusicActivity extends AppCompatActivity {
         mSortSongBtn            = findViewById(R.id.list_music_music_order_button);
         mSortArtistesBtn        = findViewById(R.id.list_music_artist_order_button);
 
-        final ArrayList<Music> songList;
-        String title = "", artist = "";
+        List<Music> songList;
+        String title = "", artist;
 
         // Read parameters from previous activity is existing
         Bundle extras = getIntent().getExtras();
@@ -69,8 +70,8 @@ public class ListMusicActivity extends AppCompatActivity {
 
         // If title is NOT defined -> read music from Local Storage
         if (title.equals("")){
-            // Read music from telephone (artist and title)
-            songList = Utils.readSong(this);
+            // Read music from telephone (artist and title) and update content from history
+            songList = Utils.updateLyrics(this, Utils.readSong(this));
         }
         // If title is defined -> search music from ORION API
         else{
@@ -84,6 +85,7 @@ public class ListMusicActivity extends AppCompatActivity {
 
             songList = new ArrayList<>();
         }
+
 
         // Populate recycler view
         mAdapter = new MusicAdapter(this, songList);
@@ -161,8 +163,9 @@ public class ListMusicActivity extends AppCompatActivity {
         protected String doInBackground(Void... urls) {
             // Do some validation
             try {
-                URL url = new URL(Parameters.ORION_API_URL_SUGGESTION + song + "%20" + artist + "&apikey=" + Parameters.ORION_API_KEY);
-                    HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                URL url = new URL(Parameters.ORION_API_URL_SUGGESTION + artist + "%20" + song + "&apikey=" + Parameters.ORION_API_KEY);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setConnectTimeout(Parameters.REQUEST_TIMEOUT);
                 try {
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                     StringBuilder stringBuilder = new StringBuilder();
@@ -179,7 +182,7 @@ public class ListMusicActivity extends AppCompatActivity {
             }
             catch(Exception e) {
                 Log.e("ERROR", e.getMessage(), e);
-                return null;
+                return "";
             }
         }
 
@@ -189,7 +192,7 @@ public class ListMusicActivity extends AppCompatActivity {
 
             // Check the current activity is still running
             if (!(activity == null || activity.isFinishing())){
-                Boolean success = !response_str.isEmpty();
+                boolean success = !response_str.isEmpty();
 
                 // Hide progress bar
                 activity.findViewById(R.id.list_music_progressBar).setVisibility(View.GONE);
@@ -202,10 +205,12 @@ public class ListMusicActivity extends AppCompatActivity {
                         JSONObject jsonObject = new JSONObject(response_str);
                         ResponseOrionSuggestion response = gson.fromJson(jsonObject.toString(), ResponseOrionSuggestion.class);
 
-                        if (response.isSuccess() && !response.getResult().isEmpty()) {
+                        if (response.isSuccess() && !response.getMusics().isEmpty()) {
                             Context context = activityReference.get();
+                            List<Music> musics = Utils.updateLyrics(context, response.getMusics());
+
                             // Populate recycler view
-                            MusicAdapter mAdapter = new MusicAdapter(context, response.getResult());
+                            MusicAdapter mAdapter = new MusicAdapter(context, musics);
                             RecyclerView mRecyclerView = activityReference.get().findViewById(R.id.list_music_recycler_view);
                             mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
                             mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
@@ -221,16 +226,13 @@ public class ListMusicActivity extends AppCompatActivity {
 
                 if (!success){
                     // Use the Builder class for convenient dialog construction
-                    AlertDialog.Builder builder = new AlertDialog.Builder(activityReference.get());
-                    builder.setMessage("Une erreur s'est produite")
-                            .setPositiveButton("fermer", (dialog, id) -> {
-                                // FIRE ZE MISSILES!
-                            })
-                            .setNegativeButton("Annuler", (dialog, id) -> {
-                                // User cancelled the dialog
-                            });
-                    // Create the AlertDialog object and return it
-                    builder.create();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setMessage("Aucune suggestion n'a été trouvée. Veuillez reessayer avec une autre chanson et/ou artiste.")
+                        .setPositiveButton("fermer", (dialog, id) -> {
+                            //set what would happen when positive button is clicked
+                            activity.finish();
+                        })
+                        .show();
                 }
             }
         }

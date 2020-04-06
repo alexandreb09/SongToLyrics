@@ -6,6 +6,9 @@ public class Parameters {
 
     public static final String NOT_AVAILABLE = "Non disponible";
 
+    // In seconds
+    public static final int REQUEST_TIMEOUT = 10;
+
     // Connection to the PYTHON API
     public static final String API_PYTHON_URL = "http://192.168.1.52";
     public static final String API_PYTHON_PORT = "5000";
@@ -21,7 +24,10 @@ public class Parameters {
     public static final String ORION_API_KEY = "veVIEjZjElfDNV4XmWIsraUP9Cuu6Otfp5AUyKQVTG0E1Xx9xMFFDwR7odUzEbAW";
 
     // Local Storage
-    public static final String PREVIOUS_SEARCH_RESULTS = "PREVIOUS_SEARCH_RESULTS";
+    public static final String STORAGE_HISTORY = "STORAGE_HISTORY";
     public static final String DATA = "DATA";
+
+    public static final int SIZE_MAX_HISTORY = 100;
+    public static final String SIZE_MAX_HISTORY_KEY = "SIZE_MAX_HISTORY";
 }
 

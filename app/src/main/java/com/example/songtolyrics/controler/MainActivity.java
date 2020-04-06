@@ -6,12 +6,12 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -41,32 +41,26 @@ public class MainActivity extends AppCompatActivity {
         btn_spotify             = findViewById(R.id.homepage_btn_spotify_connect);
 
 
-        btn_nouvelle_recherche.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent nouvelle_recherche = new Intent(getApplicationContext(), ReccordActivity.class); // Création nouvelle intent
-                startActivity(nouvelle_recherche);                                                      // Lancement nouvelle activité
-            }
+        btn_nouvelle_recherche.setOnClickListener(v -> {
+            Intent nouvelle_recherche = new Intent(getApplicationContext(), ReccordActivity.class); // Création nouvelle intent
+            startActivity(nouvelle_recherche);                                                      // Lancement nouvelle activité
         });
 
-        btn_listMusique.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Ask permission if Permission isn't granted
-                // Permission is automatically granted bellow sdk 16
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
-                    && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
+        btn_listMusique.setOnClickListener(v -> {
+            // Ask permission if Permission isn't granted
+            // Permission is automatically granted bellow sdk 16
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
+                && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
 
-                    ActivityCompat.requestPermissions(MainActivity.this,
-                            new String[]{
-                                Manifest.permission.READ_EXTERNAL_STORAGE
-                            },
-                            DEMANDE_AUTORISATION_CODE
-                    );
-                }else {
-                    runListMusicActivity();
-                }
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[]{
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+                        },
+                        DEMANDE_AUTORISATION_CODE
+                );
+            }else {
+                runListMusicActivity();
             }
         });
 
@@ -85,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(spotify);                                                                 // Lancement nouvelle activité
         });
     }
+
 
     /**
      * Gérer les demandes d'autorisatons si demande accès à la mémoire (lecture musiques)

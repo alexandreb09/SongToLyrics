@@ -6,9 +6,9 @@ import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -230,7 +230,6 @@ public class ReccordActivity extends AppCompatActivity {
             if (!(activity == null || activity.isFinishing())){
 
                 ProgressBar progressBar = activity.findViewById(R.id.audio_record_progressBar);
-                TextView responseView  = activity.findViewById(R.id.audio_record_responseView);
 
                 // Check response content
                 if(response == null) {
@@ -246,8 +245,14 @@ public class ReccordActivity extends AppCompatActivity {
                     Gson gson = new Gson();
                     Music music = gson.fromJson(response, Music.class);
 
-                    String text = music.getArtist() + "  " + music.getTitle();
-                    responseView.setText(text);
+                    // Add parameters to activity
+                    Bundle b = new Bundle();
+                    b.putString("title", music.getTitle());
+                    b.putString("artist", music.getArtist());
+
+                    Intent new_lyrics_search = new Intent(activity, LyricsActivity.class);          // Create new activity: search lyrics
+                    new_lyrics_search.putExtras(b);                                                 // Add parameters to activity
+                    activity.startActivity(new_lyrics_search);                                      // Run activity
                 }
             }
         }

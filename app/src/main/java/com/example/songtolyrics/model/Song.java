@@ -20,10 +20,6 @@ public class Song {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getText() {
         return text;
     }

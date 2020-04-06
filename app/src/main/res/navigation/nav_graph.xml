@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <fragment android:id="@+id/details_page_fragment"
+        android:label="Details"
+        android:name="com.example.android.myapp.DetailsFragment" />
+
+</navigation>

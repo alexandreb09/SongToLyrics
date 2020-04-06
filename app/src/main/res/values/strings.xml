@@ -24,6 +24,8 @@
     <string name="search_lyrics_title_field">Entrez le titre de la chanson</string>
     <string name="search_lyrics_author_field">Entrez le nom du chanteur</string>
     <string name="search_lyrics_title_search_btn">Rechercher</string>
+    <string name="search_lyrics_error_title_missing">Veuillez saisir le nom de la chanson</string>
+    <string name="search_lyrics_error_author_missing">Veuillez saisir le nom de l\'artiste</string>
 
     <string name="not_found_title">Aucun son trouvé</string>
     <string name="not_found_message">Paroles non trouvées veuillez vérifier le nom de l\'artiste ou le nom de la chanson, ou peut-être que cette chanson n\'est pas dans notre base</string>
@@ -34,4 +36,13 @@
     <string name="btn_txt_acceuil">Accueil</string>
 
     <string name="autorisation_acces_memoire_refuse">Accès mémoire refusé</string>
+    <string name="error_message_default">Une erreur s\'est produite, veuillez réessayer.</string>
+
+    <string name="message_lyrics_available">Paroles disponibles</string>
+    <string name="message_lyrics_unavailable">Paroles indisponibles</string>
+
+    <!-- Used in NavigationDrawer -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
 </resources>
