@@ -11,12 +11,14 @@
     <string name="homepage_recherche_description">Effectuer une recherche depuis:</string>
     <string name="homepage_spotify">Spotify</string>
 
-    <string name="homepage_background_description">Image arrière plan</string>
+    <string name="background_description">Image arrière plan</string>
 
     <string name="history_txt_title">Historique</string>
     <string name="history_txt_date">Date</string>
 
-    <string name="list_music_txt_title">Liste musiques</string>
+    <string name="list_music_txt_advice">Sélectionner une musique</string>
+    <string name="list_music_txt_little_suggestion">Listes de musiques suggérées</string>
+    <string name="list_music_txt_message">Sélectionner une musique</string>
 
     <string name="audio_reccord_reccord_start_btn">Enregistrer</string>
     <string name="audio_reccord_reccord_end_btn">Fin</string>

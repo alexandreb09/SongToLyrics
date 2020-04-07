@@ -1,5 +1,6 @@
 package com.example.songtolyrics.fragments;
 
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -101,11 +102,11 @@ public class ListMusicFragment extends BaseFragment {
         // ===================================== //
 
         // Return homepage
-        mAccueilBtn.setOnClickListener(v -> {
+//        mAccueilBtn.setOnClickListener(v -> {
 //            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 //            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //            startActivity(intent);
-        });
+//        });
 
         // Add listener on order button (title - artist)
         setUpMusicOrderListener(songList, mParentview);
@@ -139,6 +140,10 @@ public class ListMusicFragment extends BaseFragment {
             // Update song - artist order
             songOrder = !songOrder;
             artistOrder = true;
+
+            int drawable = songOrder ? R.drawable.ic_arrow_downward_black_24dp : R.drawable.ic_arrow_upward_black_24dp;
+            mSortSongBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, 0, 0, 0);
+            mSortArtistesBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,0,0);
         });
 
         // Update sort order from artist
@@ -155,6 +160,10 @@ public class ListMusicFragment extends BaseFragment {
             // Update song - artist order
             songOrder = false;
             artistOrder = !artistOrder;
+
+            int drawable = artistOrder ? R.drawable.ic_arrow_downward_black_24dp : R.drawable.ic_arrow_upward_black_24dp;
+            mSortArtistesBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, 0, 0, 0);
+            mSortSongBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,0,0);
         });
     }
 

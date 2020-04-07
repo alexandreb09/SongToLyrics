@@ -23,7 +23,7 @@
                 android:layout_height="260dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/background_list_musics"
-                android:contentDescription="@string/homepage_background_description" />
+                android:contentDescription="@string/background_description" />
 
             <TextView
                 android:id="@+id/textView"

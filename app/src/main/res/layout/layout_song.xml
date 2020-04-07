@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="5dp" >
+    android:padding="5dp"
+    app:cardCornerRadius="4dp"
+    app:cardUseCompatPadding="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:contentPadding="16dp"
+    android:clickable="true"
+    android:focusable="true"
+    >
 
 
     <LinearLayout
@@ -17,19 +25,26 @@
             android:id="@+id/song_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimaryDark"
             android:textSize="17sp"
+            android:layout_weight="1"
+            android:fontFamily="@font/calibri"
             android:textStyle="bold"
-            android:layout_weight="1"/>
+            android:textColor="@color/purple_fade"
+            android:text="Ceci est un titre de chanson"/>
 
         <TextView
             android:id="@+id/song_artist"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorAccent"
             android:textSize="15sp"
             android:gravity="end"
-            android:layout_weight="2"/>
+            android:layout_weight="2"
+
+            android:fontFamily="@font/calibri"
+            android:textAlignment="textEnd"
+            android:textStyle="bold"
+            android:textColor="#f5a622"
+            />
     </LinearLayout>
 
     <TextView
@@ -42,4 +57,4 @@
         android:layout_weight="2"
         />
 
-</LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -12,7 +12,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/list_music_txt_title"
+        android:text="@string/list_music_txt_little_suggestion"
         android:gravity="center"
         android:textSize="30sp"
         android:layout_margin="10sp"
