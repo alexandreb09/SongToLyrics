@@ -1,28 +1,30 @@
 package com.example.songtolyrics.view;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
+
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.songtolyrics.fragments.ListMusicFragmentDirections;
 import com.example.songtolyrics.model.Music;
 import com.example.songtolyrics.R;
-import com.example.songtolyrics.controler.LyricsActivity;
 
 import java.util.List;
 
 public class MusicAdapter extends RecyclerView.Adapter<MyHolder> {
     private Context mContext;
     private List<Music> mListMusic;
+    private View mFragmentView;
 
-    public MusicAdapter(Context context, List<Music> listeMusic){                                   // Création
+    public MusicAdapter(Context context, List<Music> listeMusic, View view){                                   // Création
         this.mContext = context;
         this.mListMusic = listeMusic;
+        this.mFragmentView = view;
     }
 
     @NonNull
@@ -43,16 +45,14 @@ public class MusicAdapter extends RecyclerView.Adapter<MyHolder> {
         }
 
         holder.setItemClickListener((v, pos) -> {                                                   // Lors du click sur l'item
-            // Add parameters to activity
-            Bundle b = new Bundle();
-            TextView t = v.findViewById(R.id.song_title);
-            b.putString("title", t.getText().toString());
-            TextView textViewArtist = v.findViewById(R.id.song_artist);
-            b.putString("artist", textViewArtist.getText().toString());
+            TextView txt_view_song = v.findViewById(R.id.song_title);
+            String song = txt_view_song.getText().toString();
+            TextView txt_view_artist = v.findViewById(R.id.song_artist);
+            String artist = txt_view_artist.getText().toString();
 
-            Intent nouvelle_recherche = new Intent(mContext, LyricsActivity.class);                 // Create new activity: search lyrics
-            nouvelle_recherche.putExtras(b);                                                        // Add parameters to activity
-            mContext.startActivity(nouvelle_recherche);                                             // Run activity
+            ListMusicFragmentDirections.ActionListMusicFragmentToLyricsFragment action =
+                    ListMusicFragmentDirections.actionListMusicFragmentToLyricsFragment(artist, song);
+            Navigation.findNavController(this.mFragmentView).navigate(action);
         });
 
     }

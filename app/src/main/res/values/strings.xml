@@ -9,9 +9,12 @@
     <string name="homepage_record_search_lyrics">Enregistrer et cherche lyrics</string>
     <string name="homepage_historique">Historique</string>
     <string name="homepage_recherche_description">Effectuer une recherche depuis:</string>
+    <string name="homepage_spotify">Spotify</string>
 
-    <string name="historique_txt_title">Historique</string>
-    <string name="historique_txt_date">Date</string>
+    <string name="homepage_background_description">Image arrière plan</string>
+
+    <string name="history_txt_title">Historique</string>
+    <string name="history_txt_date">Date</string>
 
     <string name="list_music_txt_title">Liste musiques</string>
 
@@ -19,30 +22,39 @@
     <string name="audio_reccord_reccord_end_btn">Fin</string>
     <string name="audio_reccord_play_start_btn">Lire</string>
     <string name="audio_reccord_play_end_btn">Arrêter</string>
+    <string name="audio_reccord_txt_not_found">Aucune musique correspondante n\'a été trouvée. Veuillez réessayer avec un enregistrement plus long (5s conseillé). Ou peut-être nous ne connaissons pas cette chanson.</string>
 
-    <string name="search_lyrics_title">Recherche parole</string>
+    <string name="search_lyrics_title">Quelle chanson cherches-tu ?</string>
     <string name="search_lyrics_title_field">Entrez le titre de la chanson</string>
     <string name="search_lyrics_author_field">Entrez le nom du chanteur</string>
     <string name="search_lyrics_title_search_btn">Rechercher</string>
-    <string name="search_lyrics_error_title_missing">Veuillez saisir le nom de la chanson</string>
+    <string name="search_lyrics_error_title_missing">Veuillez saisir le titre de la chanson</string>
     <string name="search_lyrics_error_author_missing">Veuillez saisir le nom de l\'artiste</string>
 
-    <string name="not_found_title">Aucun son trouvé</string>
-    <string name="not_found_message">Paroles non trouvées veuillez vérifier le nom de l\'artiste ou le nom de la chanson, ou peut-être que cette chanson n\'est pas dans notre base</string>
-    <string name="not_found_image_description">Smiley image non trouvé</string>
+    <string name="not_found_title">Aucun musique trouvée</string>
+    <string name="not_found_message">Veuillez vérifier le nom de l\'artiste et le nom de la chanson. Il est également possible que cette chanson ne soit pas dans notre base de données.</string>
+    <string name="not_found_image_description">Smiley image non trouvée</string>
+    <string name="not_found_suggestions">Suggestions</string>
+
+    <string name="spotify_connect_error_login">La connexion au compte Spotify a été annulée. Veuillez vous connecter pour continuer.</string>
+    <string name="spotify_connect_connection">Connexion en cours…</string>
+    <string name="spotify_connect_connect">Réessayer</string>
 
     <string name="txt_musique">Musique</string>
     <string name="txt_artiste">Artiste</string>
     <string name="btn_txt_acceuil">Accueil</string>
+    <string name="txt_search">Rechercher</string>
+    <string name="txt_hey">Hey!</string>
 
     <string name="autorisation_acces_memoire_refuse">Accès mémoire refusé</string>
+    <string name="autorisation_acces_micro_refuse">Accès micro refusé</string>
     <string name="error_message_default">Une erreur s\'est produite, veuillez réessayer.</string>
 
     <string name="message_lyrics_available">Paroles disponibles</string>
     <string name="message_lyrics_unavailable">Paroles indisponibles</string>
 
+
     <!-- Used in NavigationDrawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
 </resources>

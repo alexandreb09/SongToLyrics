@@ -1,121 +1,78 @@
 package com.example.songtolyrics.controler;
 
-import android.Manifest;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
-import android.provider.Settings;
-import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.navigation.NavigationView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.Navigation;
+
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.view.MenuItem;
 
 import com.example.songtolyrics.R;
 
 
-public class MainActivity extends AppCompatActivity {
-
-    public static final int DEMANDE_AUTORISATION_CODE = 50;
-
-    Button btn_nouvelle_recherche;
-    Button btn_historique;
-    Button btn_listMusique;
-    Button btn_lyrics;
-    Button btn_spotify;
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btn_nouvelle_recherche  = findViewById(R.id.homepage_btn_record);
-        btn_historique          = findViewById(R.id.homepage_btn_historique);
-        btn_listMusique         = findViewById(R.id.homepage_btn_show_musics);
-        btn_lyrics              = findViewById(R.id.homepage_btn_search_lyrics);
-        btn_spotify             = findViewById(R.id.homepage_btn_spotify_connect);
+        // 1 - Configure Toolbar
+        //FOR DESIGN
+        Toolbar mToolbar = findViewById(R.id.activity_main_toolbar);
+        setSupportActionBar(mToolbar);
 
+        // 2 - Configure Drawer Layout
+        this.mDrawerLayout = findViewById(R.id.homepage_drawer_parent);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
 
-        btn_nouvelle_recherche.setOnClickListener(v -> {
-            Intent nouvelle_recherche = new Intent(getApplicationContext(), ReccordActivity.class); // Création nouvelle intent
-            startActivity(nouvelle_recherche);                                                      // Lancement nouvelle activité
-        });
-
-        btn_listMusique.setOnClickListener(v -> {
-            // Ask permission if Permission isn't granted
-            // Permission is automatically granted bellow sdk 16
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
-                && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED) {
-
-                ActivityCompat.requestPermissions(MainActivity.this,
-                        new String[]{
-                            Manifest.permission.READ_EXTERNAL_STORAGE
-                        },
-                        DEMANDE_AUTORISATION_CODE
-                );
-            }else {
-                runListMusicActivity();
-            }
-        });
-
-        btn_historique.setOnClickListener(v -> {
-            Intent historique = new Intent(getApplicationContext(), HistoricActivity.class);        // Création nouvelle intent
-            startActivity(historique);                                                              // Lancement nouvelle activité
-        });
-
-        btn_lyrics.setOnClickListener(v -> {
-            Intent lyrics = new Intent(getApplicationContext(), LyricsActivity.class);              // Création nouvelle intent
-            startActivity(lyrics);                                                                  // Lancement nouvelle activité
-        });
-
-        btn_spotify.setOnClickListener(v -> {
-            Intent spotify = new Intent(getApplicationContext(), SpotifyConnectActivity.class);     // Création nouvelle intent
-            startActivity(spotify);                                                                 // Lancement nouvelle activité
-        });
+        // 3 - Configure NavigationView
+        NavigationView mNavigationView = findViewById(R.id.activity_main_nav_view);
+        mNavigationView.setNavigationItemSelectedListener(this);
     }
 
-
-    /**
-     * Gérer les demandes d'autorisatons si demande accès à la mémoire (lecture musiques)
-     * Paramètre : resquestCode (int), permissions[] (String), grantResults (int[])
-     * Type : void
-     */
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode ==  DEMANDE_AUTORISATION_CODE) {
-            // If request is cancelled, the result arrays are empty.
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                runListMusicActivity();
-            } else {
-                ConstraintLayout parentLayout = findViewById(R.id.homepage_parent);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)){
-                    Snackbar.make(parentLayout, R.string.autorisation_acces_memoire_refuse, Snackbar.LENGTH_LONG)
-                        .setAction("Paramètres", new View.OnClickListener(){
-                            @Override
-                            public void onClick(View view){
-                                final Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                final Uri uri = Uri.fromParts("package", getPackageName(), null);
-                                intent.setData(uri);
-                                startActivity(intent);
-                            }
-                        }).show();
-                }
-                else {
-                    Snackbar.make(parentLayout,R.string.autorisation_acces_memoire_refuse, Snackbar.LENGTH_LONG)
-                            .show();
-                }
-            }
+    public boolean onSupportNavigateUp() {
+        return Navigation.findNavController(this, R.id.nav_graph).navigateUp();
+    }
+
+    /* ====================================*/
+    @Override
+    public void onBackPressed() {
+        // 5 - Handle back click to close menu
+        if (this.mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            this.mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
 
-    public void runListMusicActivity(){
-        Intent nouvelle_recherche = new Intent(getApplicationContext(), ListMusicActivity.class);   // Create newintent
-        startActivity(nouvelle_recherche);                                                          // Run new activity
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // 4 - Handle Navigation Item Click
+        int id = item.getItemId();
+
+        switch (id){
+            case R.id.activity_main_drawer_news :
+                break;
+            case R.id.activity_main_drawer_profile:
+                break;
+            case R.id.activity_main_drawer_settings:
+                break;
+            default:
+                break;
+        }
+        this.mDrawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

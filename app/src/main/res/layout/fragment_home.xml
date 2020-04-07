@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.HomeFragment"
+    android:layout_margin="10sp">
+
+    <TextView
+        android:id="@+id/homepage_txt_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/homepage_title"
+        android:textSize="32sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/homepage_txt_sub_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/homepage_sub_title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/homepage_txt_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/homepage_txt_sub_title"
+        app:layout_constraintBottom_toTopOf="@id/homepage_btn_historique"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        >
+
+        <!-- Description-->
+        <TextView
+            android:id="@+id/homepage_txt_recherche_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/homepage_recherche_description"
+            android:textSize="20sp"
+            />
+
+        <!--Nouvelle action-->
+        <Button
+            android:id="@+id/homepage_btn_record"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="@string/homepage_record"
+            android:textSize="18sp"
+            />
+
+        <Button
+            android:id="@+id/homepage_btn_search_lyrics"
+            android:text="@string/homepage_search_lyrics"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:textSize="18sp"
+            />
+
+        <Button
+            android:id="@+id/homepage_btn_show_musics"
+            android:text="@string/homepage_btn_show_musics"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:textSize="18sp"
+            />
+
+        <Button
+            android:id="@+id/homepage_btn_spotify_connect"
+            android:text="@string/homepage_spotify"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:textSize="18sp"
+            />
+    </LinearLayout>
+
+
+    <!--Historique-->
+    <Button
+        android:id="@+id/homepage_btn_historique"
+        android:text="@string/homepage_historique"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

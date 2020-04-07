@@ -3,6 +3,7 @@ package com.example.songtolyrics;
 public class Parameters {
     // Requests codes
     public static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
+    public static final int REQUEST_MEMORY_PERMISSION = 50;
 
     public static final String NOT_AVAILABLE = "Non disponible";
 

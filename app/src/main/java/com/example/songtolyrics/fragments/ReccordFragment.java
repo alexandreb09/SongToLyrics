@@ -1,26 +1,26 @@
-package com.example.songtolyrics.controler;
+package com.example.songtolyrics.fragments;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.navigation.Navigation;
+
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.songtolyrics.R;
 import com.example.songtolyrics.Utils;
 import com.example.songtolyrics.model.Music;
-import com.example.songtolyrics.R;
 import com.google.gson.Gson;
-
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -37,10 +37,9 @@ import java.net.URL;
 import static com.example.songtolyrics.Parameters.API_PYTHON_METHOD;
 import static com.example.songtolyrics.Parameters.API_PYTHON_PORT;
 import static com.example.songtolyrics.Parameters.API_PYTHON_URL;
-import static com.example.songtolyrics.Parameters.REQUEST_RECORD_AUDIO_PERMISSION;
 
-public class ReccordActivity extends AppCompatActivity {
 
+public class ReccordFragment extends BaseFragment {
     private static final String LOG_TAG = "AudioRecordTest";
 
     private static String fileName = null;
@@ -48,25 +47,66 @@ public class ReccordActivity extends AppCompatActivity {
     private Button recordButton = null;
     private MediaRecorder recorder = null;
 
-    private Button   playButton = null;
+    private Button playButton = null;
     private MediaPlayer player = null;
 
-
-    // Requesting permission to RECORD_AUDIO
-    private boolean permissionToRecordAccepted = false;
-    private String [] permissions = {Manifest.permission.RECORD_AUDIO};
-
     // TESTS PYTHON API
-    ProgressBar mProgressBar;
-    TextView mResponseView;
+    private ProgressBar mProgressBar;
+    private TextView mResponseView;
+
+    // Required empty public constructor
+    public ReccordFragment() {}
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_RECORD_AUDIO_PERMISSION) {
-            permissionToRecordAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-        }
-        if (!permissionToRecordAccepted ) finish();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View mParentview = inflater.inflate(R.layout.fragment_reccord, container, false);
+
+        fileName = Utils.getFileName(mContext);
+
+        recordButton    = mParentview.findViewById(R.id.audio_reccord_reccord);
+        playButton      = mParentview.findViewById(R.id.audio_reccord_play);
+
+        playButton.setOnClickListener(new View.OnClickListener() {
+            boolean mStartPlaying = true;
+            public void onClick(View v) {
+                onPlay(mStartPlaying);
+                if (mStartPlaying) {
+                    playButton.setText(R.string.audio_reccord_play_end_btn);
+                } else {
+                    playButton.setText(R.string.audio_reccord_play_start_btn);
+                }
+                mStartPlaying = !mStartPlaying;
+            }
+        });
+
+        recordButton.setOnClickListener(new View.OnClickListener() {
+            boolean mStartRecording = true;
+            public void onClick(View v) {
+                onRecord(mStartRecording);
+                if (mStartRecording) {
+                    recordButton.setText(R.string.audio_reccord_reccord_end_btn);
+                } else {
+                    recordButton.setText(R.string.audio_reccord_reccord_start_btn);
+                }
+                mStartRecording = !mStartRecording;
+            }
+        });
+
+        mProgressBar            = mParentview.findViewById(R.id.audio_record_progressBar);
+        mResponseView           = mParentview.findViewById(R.id.audio_record_responseView);
+        Button testPythonAPI    = mParentview.findViewById(R.id.audio_reccord_test_python_API);
+        testPythonAPI.setOnClickListener(v -> {
+            mProgressBar.setVisibility(View.VISIBLE);
+            mResponseView.setText("");
+
+            RetrieveFeedTask runningTask;
+            runningTask = new RetrieveFeedTask(getActivity());
+            runningTask.execute();
+
+        });
+        return mParentview;
     }
 
     private void onRecord(boolean start) {
@@ -123,63 +163,6 @@ public class ReccordActivity extends AppCompatActivity {
         recorder = null;
     }
 
-
-    @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
-        setContentView(R.layout.activity_reccord);
-
-        fileName = Utils.getFileName(this);
-
-
-        ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
-
-        recordButton = findViewById(R.id.audio_reccord_reccord);
-        playButton = findViewById(R.id.audio_reccord_play);
-
-
-        playButton.setOnClickListener(new View.OnClickListener() {
-            boolean mStartPlaying = true;
-            public void onClick(View v) {
-                onPlay(mStartPlaying);
-                if (mStartPlaying) {
-                    playButton.setText(R.string.audio_reccord_play_end_btn);
-                } else {
-                    playButton.setText(R.string.audio_reccord_play_start_btn);
-                }
-                mStartPlaying = !mStartPlaying;
-            }
-        });
-
-        recordButton.setOnClickListener(new View.OnClickListener() {
-            boolean mStartRecording = true;
-            public void onClick(View v) {
-                onRecord(mStartRecording);
-                if (mStartRecording) {
-                    recordButton.setText(R.string.audio_reccord_reccord_end_btn);
-                } else {
-                    recordButton.setText(R.string.audio_reccord_reccord_start_btn);
-                }
-                mStartRecording = !mStartRecording;
-            }
-        });
-
-
-
-        mProgressBar = findViewById(R.id.audio_record_progressBar);
-        mResponseView = findViewById(R.id.audio_record_responseView);
-        Button testPythonAPI = findViewById(R.id.audio_reccord_test_python_API);
-        testPythonAPI.setOnClickListener(v -> {
-            mProgressBar.setVisibility(View.VISIBLE);
-            mResponseView.setText("");
-
-            RetrieveFeedTask runningTask;
-            runningTask = new RetrieveFeedTask(ReccordActivity.this);
-            runningTask.execute();
-
-        });
-    }
-
     @Override
     public void onStop() {
         super.onStop();
@@ -196,12 +179,11 @@ public class ReccordActivity extends AppCompatActivity {
 
 
 
-
     static class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
 
-        private WeakReference<ReccordActivity> activityReference;
+        private WeakReference<FragmentActivity> activityReference;
 
-        RetrieveFeedTask(ReccordActivity context){
+        RetrieveFeedTask(FragmentActivity context){
             activityReference = new WeakReference<>(context);
         }
 
@@ -224,35 +206,29 @@ public class ReccordActivity extends AppCompatActivity {
 
         protected void onPostExecute(String response) {
             // get a reference to the activity if it is still there
-            ReccordActivity activity = activityReference.get();
+            FragmentActivity activity = activityReference.get();
 
             // Check the current activity is still running
             if (!(activity == null || activity.isFinishing())){
 
                 ProgressBar progressBar = activity.findViewById(R.id.audio_record_progressBar);
+                progressBar.setVisibility(View.GONE);
 
                 // Check response content
                 if(response == null) {
-                    Intent myIntent = new Intent(activity, NotFoundActivity.class);
-                    activity.startActivity(myIntent);
-
-                    progressBar.setVisibility(View.GONE);
+                    TextView result = activity.findViewById(R.id.audio_reccord_txt_result);
+                    result.setVisibility(View.VISIBLE);
                 }
                 // If response isn't null <=> request received
                 else {
-                    progressBar.setVisibility(View.GONE);
-
                     Gson gson = new Gson();
                     Music music = gson.fromJson(response, Music.class);
 
-                    // Add parameters to activity
-                    Bundle b = new Bundle();
-                    b.putString("title", music.getTitle());
-                    b.putString("artist", music.getArtist());
-
-                    Intent new_lyrics_search = new Intent(activity, LyricsActivity.class);          // Create new activity: search lyrics
-                    new_lyrics_search.putExtras(b);                                                 // Add parameters to activity
-                    activity.startActivity(new_lyrics_search);                                      // Run activity
+                    // Run Lyrics search activity
+                    View view = activity.findViewById(R.id.fragment_reccord);
+                    ReccordFragmentDirections.ActionReccordFragmentToLyricsFragment action =
+                            ReccordFragmentDirections.actionReccordFragmentToLyricsFragment(music.getArtist(), music.getTitle());
+                    Navigation.findNavController(view).navigate(action);
                 }
             }
         }
@@ -349,7 +325,7 @@ public class ReccordActivity extends AppCompatActivity {
                 }
             }
             catch (java.io.IOException ex) {
-                Log.e("Error", ex.getMessage());
+                Log.e("Error", ex.toString());
             }
             finally{
                 connection.disconnect();

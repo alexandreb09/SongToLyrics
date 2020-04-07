@@ -1,103 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.drawerlayout.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/homepage_parent"
+    android:id="@+id/homepage_drawer_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10sp"
     tools:context=".controler.MainActivity">
 
 
-
-    <TextView
-        android:id="@+id/homepage_txt_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/homepage_title"
-        android:textSize="32sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/homepage_txt_sub_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/homepage_sub_title"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/homepage_txt_title" />
-
-
-
-
+    <!-- 1 | MainActivity RootView -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/homepage_txt_sub_title"
-        app:layout_constraintBottom_toTopOf="@id/homepage_btn_historique"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         >
 
-        <!-- Description-->
-        <TextView
-            android:id="@+id/homepage_txt_recherche_description"
+        <!-- Toolbar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/activity_main_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/homepage_recherche_description"
-            android:textSize="20sp"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:theme="@style/ToolBarStyle"
             />
 
-        <!--Nouvelle action-->
-        <Button
-            android:id="@+id/homepage_btn_record"
-            android:layout_height="wrap_content"
+        <!-- Layout to contain contents of main body
+             of screen (drawer will slide over this) -->
+        <!-- FrameLayout for our fragments -->
+        <fragment
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:id="@+id/activity_main_nav_host_fragment"
             android:layout_width="match_parent"
-            android:text="@string/homepage_record"
-            android:textSize="18sp"
-            />
-
-        <Button
-            android:id="@+id/homepage_btn_search_lyrics"
-            android:text="@string/homepage_search_lyrics"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:textSize="18sp"
-            />
-
-        <Button
-            android:id="@+id/homepage_btn_show_musics"
-            android:text="@string/homepage_btn_show_musics"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:textSize="18sp"
-            />
-
-        <Button
-            android:id="@+id/homepage_btn_spotify_connect"
-            android:text="Spotify"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:textSize="18sp"
-            />
+            android:layout_height="match_parent"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/nav_graph" />
 
     </LinearLayout>
 
-
-    <!--Historique-->
-    <Button
-        android:id="@+id/homepage_btn_historique"
-        android:text="@string/homepage_historique"
-        android:layout_height="wrap_content"
+    <!-- 2 | NavigationView -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/activity_main_nav_view"
         android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/activity_main_nav_header"
+        app:menu="@menu/activity_main_menu_drawer" />
 
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

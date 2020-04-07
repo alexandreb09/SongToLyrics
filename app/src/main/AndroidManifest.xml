@@ -18,34 +18,13 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="m">
-        <activity android:name=".controler.ViewPagerActivity"></activity>
-        <activity android:name=".controler.testActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
-            android:name=".controler.MainActivity"
-            android:label="Accueil">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
+            android:name=".controler.MainActivity">
+             <intent-filter>
+             <action android:name="android.intent.action.MAIN" />
+             <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
         </activity>
-        <activity android:name=".controler.ListMusicActivity" />
-        <activity android:name=".controler.HistoricActivity" />
-        <activity android:name=".controler.ReccordActivity" />
-        <activity android:name=".controler.LyricsActivity" />
-        <activity android:name=".controler.SpotifyConnectActivity" />
-        <activity android:name=".controler.SpotifyListMusics" />
-        <activity
-            android:name=".controler.NotFoundActivity"
-            android:label="Lyrics not found" />
     </application>
 
 </manifest>
