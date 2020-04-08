@@ -59,4 +59,7 @@ dependencies {
 
     // Fancy Alerts
     implementation 'com.github.Shashank02051997:FancyAlertDialog-Android:0.1'
+
+    // WordUtils
+    implementation 'org.apache.commons:commons-text:1.6'
 }

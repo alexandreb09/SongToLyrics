@@ -90,6 +90,8 @@ public class ListMusicFragment extends BaseFragment {
             mRunningTask.execute();
         }
 
+        Collections.sort(songList);
+
         // Populate recycler view
         mAdapter = new MusicAdapter(mContext, songList, mParentview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
@@ -125,7 +127,7 @@ public class ListMusicFragment extends BaseFragment {
     private void setUpMusicOrderListener(List<Music> songList, View view){
         // Init song - artist order
         songOrder = true;
-        artistOrder = true;
+        artistOrder = false;
 
         Button mSortSongBtn = view.findViewById(R.id.list_music_music_order_button);
         Button mSortArtistesBtn = view.findViewById(R.id.list_music_artist_order_button);
@@ -139,7 +141,7 @@ public class ListMusicFragment extends BaseFragment {
             mAdapter.notifyDataSetChanged();
             // Update song - artist order
             songOrder = !songOrder;
-            artistOrder = true;
+            artistOrder = false;
 
             int drawable = songOrder ? R.drawable.ic_arrow_downward_black_24dp : R.drawable.ic_arrow_upward_black_24dp;
             mSortSongBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, 0, 0, 0);

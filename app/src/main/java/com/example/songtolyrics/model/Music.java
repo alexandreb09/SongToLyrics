@@ -5,7 +5,17 @@ import android.content.Context;
 import com.example.songtolyrics.R;
 import com.google.gson.annotations.SerializedName;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import androidx.annotation.NonNull;
+
 import static com.example.songtolyrics.Parameters.NOT_AVAILABLE;
+
 
 public class Music implements Comparable<Music>{
 
@@ -19,20 +29,20 @@ public class Music implements Comparable<Music>{
     private String lyrics;
 
     public Music(String title, String artist) {
-        this.title = cleanTitle(title);
         this.artist = artist;
+        cleanAndSetTitle(title);
         this.lyrics = "";
         this.alreadySearch = false;
     }
-    public Music(Song song, Artist artist) {
-        this.title = cleanTitle(song.getName());
-        this.artist = artist.getName();
+    public Music(@NonNull Song song, @NonNull Artist artist) {
+        this.setArtist(artist.getName());
+        cleanAndSetTitle(song.getName());
         this.lyrics = "";
         this.alreadySearch = false;
     }
-    public Music(Song song) {
-        this.title = cleanTitle(song.getName());
+    public Music(@NonNull Song song) {
         this.artist = NOT_AVAILABLE;
+        this.setTitle(song.getName());
         this.lyrics = "";
         this.alreadySearch = false;
     }
@@ -42,32 +52,35 @@ public class Music implements Comparable<Music>{
         this.lyrics = "";
         this.alreadySearch = false;
     }
-    public Music(ResponseOrionLyrics responseOrionLyrics) {
-        this.artist = responseOrionLyrics.getArtist().getName();
-        this.title = responseOrionLyrics.getSong().getName();
+    public Music(@NonNull ResponseOrionLyrics responseOrionLyrics) {
+        this.setArtist(responseOrionLyrics.getArtist().getName());
+        this.setTitle(responseOrionLyrics.getSong().getName());
         this.lyrics = responseOrionLyrics.getSong().getText();
         this.alreadySearch = false;
     }
 
+    public void setTitle(String title_){ this.title = StringUtils.capitalize(title_);}
     public String getTitle(){
         return title;
     }
+    public void setArtist(String artist_){ this.artist = StringUtils.capitalize(artist_);}
     public String getArtist(){
         return artist;
-    }
-    private String cleanTitle(String title){
-        return title.replaceAll("\\(.*?\\)", "");
     }
     public boolean isLyricsAvailable() {
         return null != this.lyrics && !this.lyrics.isEmpty();
     }
-
     public String getLyrics() {
         return lyrics;
     }
-
     public void setLyrics(String lyrics) {
         this.lyrics = lyrics;
+    }
+    public void setAlreadySearch(boolean alreadySearch) {
+        this.alreadySearch = alreadySearch;
+    }
+    public boolean isAlreadySearch() {
+        return alreadySearch;
     }
 
     public String getLyricsAvailableString(Context context){
@@ -83,11 +96,45 @@ public class Music implements Comparable<Music>{
 
     }
 
-    public void setAlreadySearch(boolean alreadySearch) {
-        this.alreadySearch = alreadySearch;
+    private void cleanAndSetTitle(@NonNull String title){
+        List<String> result = new ArrayList<>();
+        String proper = title.toLowerCase()                                                         // Lowercase
+                .replaceAll("\\(.*?\\)", "")                                        // Word between "()"
+                .replaceAll("\\[(.*?)\\]", "")                                      // Word between "[]"
+                .replaceAll("_", "-")                                               // Change _ to -
+                .replaceAll("É", "E");                                              // Change É to E
+
+        String[] temp = proper.split("-");                                                    // Split by -
+        if (1 == temp.length){
+            temp = proper.split("\\s{2,}");
+        }
+
+        for (String s : temp) {
+            if (!s.matches("^\\s*$") && !s.matches(".*\\b(lyrics|official|officiel|vidéo|video|avec|paroles|mix|radio|[0-9]{4})\\b.*")) {
+                result.add(s.replaceAll("^(\\s+)", "").replaceAll("(\\s+)$", ""));
+            }
+        }
+
+        if (result.isEmpty()) result.add(proper);
+
+        if ((this.getArtist().equals(NOT_AVAILABLE) || this.getArtist().isEmpty()) && 2 == result.size()){
+            this.setArtist(result.get(0));
+            // If the title contains "ft" or "feat" -> remove all following
+            int idx = ftIndex(result.get(1));
+            this.setTitle(idx >= 0 ? result.get(1).substring(0, idx) : result.get(1));
+        }else{
+            StringBuilder title_cleaned = new StringBuilder();
+            for (String s: result){
+                title_cleaned.append(s).append(" - ");
+            }
+            title_cleaned = new StringBuilder(title_cleaned.substring(0, title_cleaned.length() - 3));
+            this.setTitle(title_cleaned.toString());
+        }
     }
-    public boolean isAlreadySearch() {
-        return alreadySearch;
+
+    private static int ftIndex(String s) {
+        Matcher matcher = Pattern.compile("(ft|feat|ft.)").matcher(s);
+        return matcher.find() ? matcher.start() : -1;
     }
 
     @Override
