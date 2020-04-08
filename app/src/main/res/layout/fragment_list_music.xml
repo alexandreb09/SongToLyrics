@@ -25,45 +25,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="260dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/background_list_musics" />
+                android:src="@drawable/background_list_musics"
+                android:contentDescription="@string/background_description" />
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/list_music_txt_top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/print_clearly"
-                android:text="@string/list_music_txt_advice"
                 android:textAlignment="center"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/list_music_title"
+                android:id="@+id/list_music_txt_middle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textView"
+                android:layout_below="@+id/list_music_txt_top"
                 android:fontFamily="@font/gotham"
-                android:text="Titre"
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
                 android:layout_marginTop="8dp"
                 android:textSize="18sp"/>
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/list_music_txt_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/list_music_title"
+                android:layout_below="@+id/list_music_txt_middle"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/print_clearly"
-                android:text="Artist"
                 android:textAlignment="center"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
-
         </RelativeLayout>
 
         <androidx.cardview.widget.CardView

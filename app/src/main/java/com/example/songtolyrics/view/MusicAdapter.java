@@ -22,9 +22,9 @@ public class MusicAdapter extends RecyclerView.Adapter<MyHolder> {
     private View mFragmentView;
 
     public MusicAdapter(Context context, List<Music> listeMusic, View view){                                   // Création
-        this.mContext = context;
-        this.mListMusic = listeMusic;
-        this.mFragmentView = view;
+        this.mContext       = context;
+        this.mListMusic     = listeMusic;
+        this.mFragmentView  = view;
     }
 
     @NonNull

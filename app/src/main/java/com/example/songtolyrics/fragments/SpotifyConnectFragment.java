@@ -24,6 +24,8 @@ import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
+import static com.example.songtolyrics.Parameters.SOURCE_SPOTIFY;
+
 
 public class SpotifyConnectFragment extends BaseFragment {
     private SharedPreferences.Editor editor;
@@ -70,8 +72,9 @@ public class SpotifyConnectFragment extends BaseFragment {
             // We use commit instead of apply because we
             // need the information stored immediately
             editor.commit();
+
             // Start new fragment
-            NavDirections action = SpotifyConnectFragmentDirections.actionSpotifyConnectFragmentToSpotifyListMusicFragment();
+            NavDirections action = SpotifyConnectFragmentDirections.actionSpotifyConnectFragmentToListMusicFragment("","",SOURCE_SPOTIFY);
             Navigation.findNavController(mParentView).navigate(action);
         });
     }

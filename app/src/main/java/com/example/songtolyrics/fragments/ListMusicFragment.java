@@ -1,11 +1,13 @@
 package com.example.songtolyrics.fragments;
 
-import android.graphics.drawable.Drawable;
+import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,15 +17,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.songtolyrics.Parameters;
 import com.example.songtolyrics.R;
 import com.example.songtolyrics.Utils;
+import com.example.songtolyrics.connectors.SpotifySongService;
 import com.example.songtolyrics.model.Music;
 import com.example.songtolyrics.model.ResponseOrionSuggestion;
 import com.example.songtolyrics.view.MusicAdapter;
 import com.example.songtolyrics.view.SimpleDividerItemDecoration;
 import com.google.gson.Gson;
+import com.shashank.sony.fancydialoglib.Animation;
+import com.shashank.sony.fancydialoglib.FancyAlertDialog;
+import com.shashank.sony.fancydialoglib.Icon;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +42,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+
+import static com.example.songtolyrics.Parameters.SOURCE_LOCAL_STORAGE;
+import static com.example.songtolyrics.Parameters.SOURCE_SPOTIFY;
+import static com.example.songtolyrics.Parameters.SOURCE_SUGGESTION;
 
 
 public class ListMusicFragment extends BaseFragment {
@@ -48,6 +60,8 @@ public class ListMusicFragment extends BaseFragment {
 
     private String mTitle;
     private String mArtist;
+    private int mSource;
+    private List<Music> mListMusics;
 
     // Required empty public constructor
     public ListMusicFragment() {}
@@ -58,9 +72,11 @@ public class ListMusicFragment extends BaseFragment {
         if (getArguments() != null){
             mArtist = ListMusicFragmentArgs.fromBundle(getArguments()).getARTIST();
             mTitle = ListMusicFragmentArgs.fromBundle(getArguments()).getTITLE();
+            mSource = ListMusicFragmentArgs.fromBundle(getArguments()).getSource();
         }else{
             mTitle = "";
             mArtist = "";
+            mSource = SOURCE_LOCAL_STORAGE;
         }
     }
 
@@ -70,33 +86,82 @@ public class ListMusicFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View mParentview = inflater.inflate(R.layout.fragment_list_music, container, false);
 
+        TextView upper_txt  = mParentview.findViewById(R.id.list_music_txt_top);
+        TextView middle_txt = mParentview.findViewById(R.id.list_music_txt_middle);
+        TextView lower_txt  = mParentview.findViewById(R.id.list_music_txt_bottom);
+
         // RECYCLER VIEW
         RecyclerView mRecyclerView  = mParentview.findViewById(R.id.list_music_recycler_view);
-        Button mAccueilBtn          = mParentview.findViewById(R.id.list_music_menu_button);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mContext));
 
-        List<Music> songList = new ArrayList<>();
+//        Button mAccueilBtn          = mParentview.findViewById(R.id.list_music_menu_button);
 
-        // If title is NOT defined -> read music from Local Storage
-        if (mTitle.equals("")){
-            // Read music from telephone (artist and title) and update content from history
-            songList = Utils.updateLyrics(mContext, Utils.readSong(mContext));
-        }
-        // If title is defined -> search music from ORION API
-        else{
+        // If the activity source is looking for suggestion
+        if (SOURCE_SUGGESTION == mSource){
+            // Start loading suggestion task
+            mRunningTask = new RetrieveFeedTask(mTitle, mArtist, getActivity());
+            mRunningTask.execute();
+
+            // Update layout text
+            upper_txt.setText(mContext.getResources().getString(R.string.list_music_suggestion_loading));
+            middle_txt.setText(mTitle);
+            lower_txt.setText(mArtist);
+
+            // Show progress bar
             ProgressBar progressBar = mParentview.findViewById(R.id.list_music_progressBar);
             progressBar.setVisibility(View.VISIBLE);
 
-            mRunningTask = new RetrieveFeedTask(mTitle, mArtist, getActivity());
-            mRunningTask.execute();
+            mAdapter = new MusicAdapter(mContext, new ArrayList<>(), mParentview);
+
+            // Add listener on order button (title - artist)
+            setUpMusicOrderListener(mListMusics, mParentview);
+        }
+        // If the activity source is looking recently played spotify musics
+        else if (SOURCE_SPOTIFY ==  mSource){
+            // Update layout text
+            upper_txt.setText(mContext.getResources().getString(R.string.list_music_txt_advice_spotify));
+            middle_txt.setText(mContext.getResources().getString(R.string.list_music_txt_advice_spotify_detail));
+            lower_txt.setVisibility(View.INVISIBLE);
+
+            // Return musics from Spotify service
+            SpotifySongService songService = new SpotifySongService(mContext);
+            songService.getRecentlyPlayedTracks(() -> {
+                mListMusics = new ArrayList<>();
+                // Remove duplicates
+                for (Music m: songService.getSongs()){
+                    if (!mListMusics.contains(m)) mListMusics.add(m);
+                }
+
+                mAdapter = new MusicAdapter(mContext, mListMusics, mParentview);
+                // Populate recycler view
+                mRecyclerView.setAdapter(mAdapter);
+
+                // Add listener on order button (title - artist)
+                setUpMusicOrderListener(mListMusics, mParentview);
+            });
+        }
+        // DEFAUT CASE: read music from local Storage
+        else {
+            // Update layout text
+            upper_txt.setVisibility(View.INVISIBLE);
+            middle_txt.setText(mContext.getResources().getString(R.string.list_music_txt_advice_local));
+            lower_txt.setVisibility(View.INVISIBLE);
+
+            // Read music from telephone (artist and title) and update content from history
+            mListMusics = Utils.updateLyrics(mContext, Utils.readSong(mContext));
+            Collections.sort(mListMusics);
+            mAdapter = new MusicAdapter(mContext, mListMusics, mParentview);
+
+            // Populate recycler view
+            mRecyclerView.setAdapter(mAdapter);
+
+            // Add listener on order button (title - artist)
+            setUpMusicOrderListener(mListMusics, mParentview);
         }
 
-        Collections.sort(songList);
 
-        // Populate recycler view
-        mAdapter = new MusicAdapter(mContext, songList, mParentview);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mContext));
-        mRecyclerView.setAdapter(mAdapter);
+
 
 
         // ===================================== //
@@ -111,7 +176,7 @@ public class ListMusicFragment extends BaseFragment {
 //        });
 
         // Add listener on order button (title - artist)
-        setUpMusicOrderListener(songList, mParentview);
+        setUpMusicOrderListener(mListMusics, mParentview);
 
         return mParentview;
     }
@@ -218,8 +283,12 @@ public class ListMusicFragment extends BaseFragment {
                 // Hide progress bar
                 activityReference.get().findViewById(R.id.list_music_progressBar).setVisibility(View.GONE);
 
-                if (success) {
 
+                View view = activity.findViewById(R.id.fragment_list_music);
+                TextView upper_txt = view.findViewById(R.id.list_music_txt_top);
+
+                if (success) {
+                    upper_txt.setText(activity.getApplicationContext().getResources().getString(R.string.list_music_txt_advice_suggestion));
                     Gson gson = new Gson();
 
                     try {
@@ -228,8 +297,6 @@ public class ListMusicFragment extends BaseFragment {
 
                         if (response.isSuccess() && !response.getMusics().isEmpty()) {
                             List<Music> musics = Utils.updateLyrics(activity, response.getMusics());
-
-                            View view = activity.findViewById(R.id.fragment_list_music);
 
                             // Populate recycler view
                             MusicAdapter mAdapter = new MusicAdapter(activity, musics, view);
@@ -247,14 +314,26 @@ public class ListMusicFragment extends BaseFragment {
                 }
 
                 if (!success){
-                    // Use the Builder class for convenient dialog construction
-                    AlertDialog.Builder builder = new AlertDialog.Builder(activityReference.get());
-                    builder.setMessage("Aucune suggestion n'a été trouvée. Veuillez reessayer avec une autre chanson et/ou artiste.")
-                            .setPositiveButton("fermer", (dialog, id) -> {
-                                //set what would happen when positive button is clicked
-//                                activity.finish();
+                    upper_txt.setText(activity.getApplicationContext().getResources().getString(R.string.list_music_suggestion_not_found_title));
+
+                    Context context = activity.getApplicationContext();
+                    new FancyAlertDialog.Builder(activity)
+                            .setTitle(context.getResources().getString(R.string.list_music_suggestion_not_found_title))
+                            .setBackgroundColor(Color.parseColor("#F57C00"))
+                            .setMessage(context.getResources().getString(R.string.list_music_suggestion_not_found_msg))
+                            .setNegativeBtnText("ANNULER")
+                            .setNegativeBtnBackground(Color.parseColor("#FFA9A7A8"))
+                            .setPositiveBtnText("MODIFIER")
+                            .setPositiveBtnBackground(Color.parseColor("#F57C00"))
+                            .setAnimation(Animation.POP)
+                            .isCancellable(true)
+                            .setIcon(R.drawable.ic_pan_tool_black_24dp, Icon.Visible)
+                            .OnPositiveClicked(() -> {
+                                NavController controller = Navigation.findNavController(view);
+                                controller.popBackStack(); //R.id.fragment_home, true);
                             })
-                            .show();
+                            .OnNegativeClicked(() -> {})
+                            .build();
                 }
             }
         }

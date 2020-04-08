@@ -24,6 +24,7 @@ import static com.example.songtolyrics.Parameters.API_PYTHON_FILENAME;
 import static com.example.songtolyrics.Parameters.DATA;
 import static com.example.songtolyrics.Parameters.SIZE_MAX_HISTORY;
 import static com.example.songtolyrics.Parameters.SIZE_MAX_HISTORY_KEY;
+import static com.example.songtolyrics.Parameters.STORAGE_FAVORITES;
 import static com.example.songtolyrics.Parameters.STORAGE_HISTORY;
 
 
@@ -136,18 +137,6 @@ public class Utils {
         return music;
     }
 
-
-    /**
-     * Check if the music already exists in the list
-     *      - Verification on artist name and song title
-     * @param list: list of musics
-     * @param music: music to search
-     * @return bolean: is music in list
-     */
-    public static boolean containsMusic(final List<Music> list, final Music music){
-        return indexMusic(list, music) < 0;
-    }
-
     /**
      * Return index of the music in the list
      *      -> return -1 if not found
@@ -214,6 +203,56 @@ public class Utils {
         return musics;
     }
 
+
+
+
+    // ======================================================//
+    //                      FAVORITES                        //
+    // ======================================================//
+    public static List<Music> readFavoriteFromStorage(Context context){
+        SharedPreferences mSharedPreferences = context.getSharedPreferences(DATA, MODE_PRIVATE);
+
+        Type type = new TypeToken<List<Music>>(){}.getType();
+        String jsonMusics = mSharedPreferences.getString(STORAGE_FAVORITES, "");
+        List<Music> musics = new Gson().fromJson(jsonMusics, type);
+        if (null == musics) musics = new ArrayList<>();
+        return musics;
+    }
+
+    public static void addFavoriteAndStore(Context context, Music music_new){
+        music_new.setAlreadySearch(true);
+
+        SharedPreferences mSharedPreferences = context.getSharedPreferences(DATA, MODE_PRIVATE);
+        SharedPreferences.Editor listeEditor = mSharedPreferences.edit();
+
+        List<Music> musics = readFavoriteFromStorage(context);
+
+        // If favorites isn't in history
+        if (!musics.contains(music_new)){
+            musics.add(music_new);
+
+            String jsonMusics = new Gson().toJson(musics);
+            listeEditor.putString(STORAGE_FAVORITES, jsonMusics);
+            listeEditor.apply();
+        }
+    }
+    public static void removeFavoriteAndStore(Context context, Music music_new){
+        // Load favorites
+        List<Music> musics = readFavoriteFromStorage(context);
+
+        // If favorites isn't in history
+        if (musics.contains(music_new)){
+            // Remove element
+            musics.remove(music_new);
+            String jsonMusics = new Gson().toJson(musics);
+
+            context.getSharedPreferences(DATA, MODE_PRIVATE)
+                    .edit()
+                    .putString(STORAGE_FAVORITES, jsonMusics)
+                    .apply();
+        }
+    }
+
     // ======================================================//
     //                      TOAST ERROR                      //
     // ======================================================//
@@ -221,7 +260,7 @@ public class Utils {
         Utils.showToastError(context, context.getResources().getString(R.string.error_message_default));
     }
 
-    public static void showToastError(Context context, String message){
+    private static void showToastError(Context context, String message){
         Toast toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
         toast.show();
     }

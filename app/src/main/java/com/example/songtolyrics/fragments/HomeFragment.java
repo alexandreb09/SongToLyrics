@@ -1,179 +1,263 @@
 package com.example.songtolyrics.fragments;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavDirections;
+import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.Navigation;
 
-import android.provider.Settings;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.songtolyrics.Parameters;
 import com.example.songtolyrics.R;
-import com.google.android.material.snackbar.Snackbar;
+import com.example.songtolyrics.Utils;
+import com.example.songtolyrics.model.Music;
+import com.example.songtolyrics.model.ResponseOrionLyrics;
+import com.google.gson.Gson;
+import com.shashank.sony.fancydialoglib.Animation;
+import com.shashank.sony.fancydialoglib.FancyAlertDialog;
+import com.shashank.sony.fancydialoglib.Icon;
 
-import java.util.Objects;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.List;
+
+import static com.example.songtolyrics.Parameters.SOURCE_SUGGESTION;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * create an instance of this fragment.
- */
-public class HomeFragment extends Fragment {
-    private Context mContext;
-    private View mParentview;
+public class HomeFragment extends BaseFragment {
+    private String mTitle;
+    private String mArtist;
 
-    public HomeFragment() {
-        // Required empty public constructor
-    }
+    private EditText mSongName;
+    private EditText mArtistName;
+    private TextView mResponseView;
+    private ProgressBar mProgressBar;
+
+    private RetrieveFeedTask mRunningTask;
+    private List<Music> mMusicHistory;
+
+    // Required empty public constructor
+    public HomeFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext = Objects.requireNonNull(getActivity()).getApplicationContext();
+        if (getArguments() != null){
+            mTitle = HomeFragmentArgs.fromBundle(getArguments()).getTitle();
+            mArtist = HomeFragmentArgs.fromBundle(getArguments()).getArtist();
+        }else{
+            mTitle = "";
+            mArtist = "";
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mParentview = inflater.inflate(R.layout.fragment_home, container, false);
+        View mParentView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        Button btn_reccord              = mParentview.findViewById(R.id.homepage_btn_record);
-        Button btn_historique           = mParentview.findViewById(R.id.homepage_btn_historique);
-        Button btn_listMusique          = mParentview.findViewById(R.id.homepage_btn_show_musics);
-        Button btn_lyrics               = mParentview.findViewById(R.id.homepage_btn_search_lyrics);
-        Button btn_spotify              = mParentview.findViewById(R.id.homepage_btn_spotify_connect);
+//        mResponseView   = mParentView.findViewById(R.id.responseView);
+        mSongName       = mParentView.findViewById(R.id.songName);
+        mArtistName     = mParentView.findViewById(R.id.artistName);
+        mProgressBar    = mParentView.findViewById(R.id.progressBar);
 
-        btn_reccord.setOnClickListener(v -> {
-            // Ask permission:
-            // Permission is automatically granted bellow sdk 16
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
-                    && ContextCompat.checkSelfPermission(mContext, Manifest.permission.RECORD_AUDIO)
-                    != PackageManager.PERMISSION_GRANTED) {
-                // Ask permission to the user
-                requestPermissions(
-                        new String[]{Manifest.permission.RECORD_AUDIO},
-                        Parameters.REQUEST_RECORD_AUDIO_PERMISSION
-                );
-            }else {
-                startReccordFragment(mParentview);
+        Button mQueryButton = mParentView.findViewById(R.id.queryButton);
+
+
+        if (!mArtist.isEmpty()) mArtistName.setText(mArtist);
+        if (!mTitle.isEmpty()) mSongName.setText(mTitle);
+
+        // Load previous searched
+        mMusicHistory =  Utils.restoreMusicHistory(mContext);
+
+        mQueryButton.setOnClickListener(v -> {
+            String song = mSongName.getText().toString();
+            String artist = mArtistName.getText().toString();
+
+            // Check song field not empty
+            if (TextUtils.isEmpty(song)){
+                mSongName.setError(getResources().getString(R.string.search_lyrics_error_title_missing));
+            }
+            // Check artist field not empty
+            else if (TextUtils.isEmpty(artist)){
+                mArtistName.setError(getResources().getString(R.string.search_lyrics_error_author_missing));
+            }
+            // Check song+artist not already search without success
+            else if (Utils.doResearch(artist, song, mMusicHistory)){
+                mProgressBar.setVisibility(View.VISIBLE);
+                mQueryButton.setEnabled(false);
+
+                mRunningTask = new RetrieveFeedTask(song, artist, mMusicHistory, getActivity());
+                mRunningTask.execute();
+            }
+            // A similar research have already been done with no success
+            //      -> directly redirect to not found activity
+            else{
+                startNotFoundActivity(getActivity(), mContext, mParentView, song, artist);
+                mQueryButton.setEnabled(true);
             }
         });
 
-        btn_listMusique.setOnClickListener(v -> {
-            // Ask permission:
-            // Permission is automatically granted bellow sdk 16
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
-                    && ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED) {
+        return mParentView;
+    }
 
-                requestPermissions(
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        Parameters.REQUEST_MEMORY_PERMISSION
-                );
-            }else {
-                startListMusicFragment(mParentview);
-            }
-        });
-
-        btn_historique.setOnClickListener(v -> {
-            NavDirections action = HomeFragmentDirections.actionHomeFragmentToHistoryFragment();
-            Navigation.findNavController(mParentview).navigate(action);
-        });
-
-        btn_lyrics.setOnClickListener(v -> startLyricsFragment(mParentview));
-
-        btn_spotify.setOnClickListener(v -> {
-            NavDirections action = HomeFragmentDirections.actionHomeFragmentToSpotifyConnectFragment();
-            Navigation.findNavController(mParentview).navigate(action);
-        });
-
-        return mParentview;
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // Cancel running task(s) to avoid memory leaks
+        if (mRunningTask != null)
+            mRunningTask.cancel(true);
     }
 
     /**
-     * Gérer les demandes d'autorisatons si demande accès à la mémoire (lecture musiques)
-     * Paramètre : resquestCode (int), permissions[] (String), grantResults (int[])
-     * Type : void
+     * Start not found activity
+     * @param fragmentActivity: fragment activity
+     * @param context: fragment context
+     * @param title: song title not found
+     * @param artist: artist not found
      */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode ==  Parameters.REQUEST_MEMORY_PERMISSION) {
-            // If request is cancelled, the result arrays are empty.
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startListMusicFragment(mParentview);
-            } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)){
-                    Snackbar.make(mParentview, R.string.autorisation_acces_memoire_refuse, Snackbar.LENGTH_LONG)
-                            .setAction("Paramètres", view -> {
-                                final Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                final Uri uri = Uri.fromParts("package", mContext.getPackageName(), null);
-                                intent.setData(uri);
-                                startActivity(intent);
-                            }).show();
+    private static void startNotFoundActivity(FragmentActivity fragmentActivity,
+                                              Context context,
+                                              View view,
+                                              String title,
+                                              String artist){
+        new FancyAlertDialog.Builder(fragmentActivity)
+                .setTitle(context.getResources().getString(R.string.not_found_title))
+                .setBackgroundColor(Color.parseColor("#F57C00"))
+                .setMessage(context.getResources().getString(R.string.not_found_message))
+                 .setNegativeBtnText("MODIFIER")
+                .setNegativeBtnBackground(Color.parseColor("#FFA9A7A8"))
+                .setPositiveBtnBackground(Color.parseColor("#F57C00"))
+                .setPositiveBtnText(context.getResources().getString(R.string.not_found_suggestions))
+                .setAnimation(Animation.POP)
+                .isCancellable(true)
+                .setIcon(R.drawable.ic_pan_tool_black_24dp, Icon.Visible)
+                .OnPositiveClicked(() -> {
+                    HomeFragmentDirections.ActionHomeFragmentToListMusicFragment action =
+                            HomeFragmentDirections.actionHomeFragmentToListMusicFragment(title, artist, SOURCE_SUGGESTION);
+                    Navigation.findNavController(view).navigate(action);
+                })
+                .OnNegativeClicked(() -> {
+                    Button button = view.findViewById(R.id.queryButton);
+                    button.setEnabled(true);
+                })
+                .build();
+    }
+
+
+    static class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
+        String song;
+        String artist;
+        List<Music> musicHistory;
+        private WeakReference<FragmentActivity> activityReference;
+
+        RetrieveFeedTask(String s, String a, List<Music> musicHistory_, FragmentActivity context){
+            this.song = s;
+            this.artist = a;
+            this.musicHistory = musicHistory_;
+            this.activityReference = new WeakReference<>(context);
+        }
+
+        protected void onPreExecute() {
+        }
+
+        protected String doInBackground(Void... urls) {
+            String response = "{\"result\": {\"error\": \"Lyric no found, try again later.\"}}";
+
+            // Do some validation
+            try {
+                // Build URL
+                URL url = new URL(Parameters.ORION_API_URL_LYRICS + artist + "/" + song + "?" +"apikey=" + Parameters.ORION_API_KEY);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                try {
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        stringBuilder.append(line).append("\n");
+                    }
+                    bufferedReader.close();
+                    if (0 < stringBuilder.length()){
+                        response = stringBuilder.toString();
+                    }
                 }
-                else {
-                    Snackbar.make(mParentview,R.string.autorisation_acces_memoire_refuse, Snackbar.LENGTH_LONG)
-                            .show();
+                finally{
+                    urlConnection.disconnect();
                 }
             }
-        }else if(requestCode ==  Parameters.REQUEST_RECORD_AUDIO_PERMISSION) {
-            // If request is cancelled, the result arrays are empty.
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startReccordFragment(mParentview);
-            } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO)){
-                    Snackbar.make(mParentview, R.string.autorisation_acces_memoire_refuse, Snackbar.LENGTH_LONG)
-                            .setAction("Paramètres", view -> {
-                                final Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                final Uri uri = Uri.fromParts("package", mContext.getPackageName(), null);
-                                intent.setData(uri);
-                                startActivity(intent);
-                            }).show();
+            catch(Exception e) {
+                Log.e("ERROR", e.getMessage(), e);
+            }
+            return response;
+        }
+
+        protected void onPostExecute(String response) {
+            // get a reference to the activity if it is still there
+            FragmentActivity activity = activityReference.get();
+
+            // Check the current activity is still running
+            if (!(activity == null || activity.isFinishing())){
+
+                // Hide progress bar
+                ProgressBar progressBar = activity.findViewById(R.id.progressBar);
+                progressBar.setVisibility(View.GONE);
+
+                // Unserialize response
+                ResponseOrionLyrics responseOrion;
+                try {
+                    // Get result from request
+                    JSONObject jsonObject = new JSONObject(response).optJSONObject("result");
+                    // Unserialized result to a ResponseOrionLyrics object
+                    responseOrion = new Gson().fromJson(jsonObject.toString(), ResponseOrionLyrics.class);
+                }catch (JSONException err){
+                    Log.d("Error", err.toString());
+                    responseOrion = new ResponseOrionLyrics("Aucune music disponible");
                 }
-                else {
-                    Snackbar.make(mParentview, R.string.autorisation_acces_micro_refuse, Snackbar.LENGTH_LONG)
-                            .show();
+
+                View view = activity.findViewById(R.id.fragment_lyrics);
+
+                // If valid response
+                if (responseOrion.isValid()){
+                    // Add music to history and store it
+                    Music music = new Music(responseOrion);
+                    musicHistory = Utils.addMusic(activity, musicHistory, music);
+                    Utils.storeMusicHistory(activity, this.musicHistory);
+
+                    // Show results
+                    HomeFragmentDirections.ActionHomeFragmentToLyricsResultFragment action =
+                            HomeFragmentDirections.actionHomeFragmentToLyricsResultFragment(music);
+                    Navigation.findNavController(view).navigate(action);
+                }
+                // If invalid response
+                else{
+                    Music music = new Music(song, artist);
+
+                    // Add music to history and store it
+                    musicHistory = Utils.addMusic(activity, musicHistory, music);
+                    Utils.storeMusicHistory(activity, this.musicHistory);
+
+                    // Start not found activity
+                    HomeFragment.startNotFoundActivity(activity, activity.getApplicationContext(),view, song, artist);
                 }
             }
         }
-    }
-
-    /**
-     * Start Lyrics activity
-     * @param view : fragment view
-     */
-    private void startLyricsFragment(View view){
-        HomeFragmentDirections.ActionHomeFragmentToLyricsFragment action =
-                HomeFragmentDirections.actionHomeFragmentToLyricsFragment("", "");
-        Navigation.findNavController(view).navigate(action);
-    }
-
-    /**
-     * Start the List music fragment
-     * @param view : fragment parent view
-     */
-    private void startListMusicFragment(View view){
-        HomeFragmentDirections.ActionHomeFragmentToListMusicFragment action =
-                HomeFragmentDirections.actionHomeFragmentToListMusicFragment("", "");
-        Navigation.findNavController(view).navigate(action);
-    }
-
-    private void startReccordFragment(View view){
-        NavDirections action = HomeFragmentDirections.actionHomeFragmentToReccordFragment();
-        Navigation.findNavController(view).navigate(action);
     }
 }

@@ -1,6 +1,8 @@
 package com.example.songtolyrics.model;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.example.songtolyrics.R;
 import com.google.gson.annotations.SerializedName;
@@ -17,7 +19,7 @@ import androidx.annotation.NonNull;
 import static com.example.songtolyrics.Parameters.NOT_AVAILABLE;
 
 
-public class Music implements Comparable<Music>{
+public class Music implements Comparable<Music>, Parcelable {
 
     @SerializedName(value="title")
     private String title;
@@ -141,4 +143,47 @@ public class Music implements Comparable<Music>{
     public int compareTo(Music o) {
         return title.toLowerCase().compareTo(o.getTitle().toLowerCase());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (o == this) return true;
+        if (!(o instanceof Music))return false;
+        Music o_m = (Music) o;
+        return (title + artist).toLowerCase().equals((o_m.getTitle() + o_m.getArtist()).toLowerCase());
+    }
+
+    // PARCEL PART
+
+    // Parcelling part
+    public Music(Parcel in){
+        String[] data = new String[3];
+
+        in.readStringArray(data);
+        // the order needs to be the same as in writeToParcel() method
+        this.title = data[0];
+        this.artist = data[1];
+        this.lyrics = data[2];
+        this.alreadySearch = false;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeStringArray(new String[] {getTitle(),getArtist(), getLyrics()});
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Music createFromParcel(Parcel in) {
+            return new Music(in);
+        }
+
+        public Music[] newArray(int size) {
+            return new Music[size];
+        }
+    };
 }

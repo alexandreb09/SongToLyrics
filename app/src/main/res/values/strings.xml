@@ -12,13 +12,18 @@
     <string name="homepage_spotify">Spotify</string>
 
     <string name="background_description">Image arrière plan</string>
+    <string name="icon_favorite_description">Icone favoris</string>
 
     <string name="history_txt_title">Historique</string>
     <string name="history_txt_date">Date</string>
 
-    <string name="list_music_txt_advice">Sélectionner une musique</string>
-    <string name="list_music_txt_little_suggestion">Listes de musiques suggérées</string>
-    <string name="list_music_txt_message">Sélectionner une musique</string>
+    <string name="list_music_txt_advice_local">Sélectionner une musique parmis les musiques de votre téléphone</string>
+    <string name="list_music_txt_advice_suggestion">Sélectionner une musique parmi les suggestions:</string>
+    <string name="list_music_txt_advice_spotify">Sélectionner une musique</string>
+    <string name="list_music_txt_advice_spotify_detail">Vos dernières écoutes sur Spotify…</string>
+    <string name="list_music_suggestion_loading">Recherche de suggestions…</string>
+    <string name="list_music_suggestion_not_found_title">Aucune suggestion trouvéee.</string>
+    <string name="list_music_suggestion_not_found_msg">Veuillez reessayer avec une autre chanson et/ou artiste.</string>
 
     <string name="audio_reccord_reccord_start_btn">Enregistrer</string>
     <string name="audio_reccord_reccord_end_btn">Fin</string>
@@ -33,6 +38,9 @@
     <string name="search_lyrics_error_title_missing">Veuillez saisir le titre de la chanson</string>
     <string name="search_lyrics_error_author_missing">Veuillez saisir le nom de l\'artiste</string>
 
+    <string name="lyrics_result_title_top">A toi de jouer maintenant !</string>
+    <string name="lyrics_result_new_search">Nouvelle recherche</string>
+
     <string name="not_found_title">Aucun musique trouvée</string>
     <string name="not_found_message">Veuillez vérifier le nom de l\'artiste et le nom de la chanson. Il est également possible que cette chanson ne soit pas dans notre base de données.</string>
     <string name="not_found_image_description">Smiley image non trouvée</string>
@@ -44,7 +52,6 @@
 
     <string name="txt_musique">Musique</string>
     <string name="txt_artiste">Artiste</string>
-    <string name="btn_txt_acceuil">Accueil</string>
     <string name="txt_search">Rechercher</string>
     <string name="txt_hey">Hey!</string>
 
@@ -59,4 +66,7 @@
     <!-- Used in NavigationDrawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -5,6 +5,11 @@ public class Parameters {
     public static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     public static final int REQUEST_MEMORY_PERMISSION = 50;
 
+    public static final int SOURCE_SPOTIFY          = 1;
+    public static final int SOURCE_LOCAL_STORAGE    = 2;
+    public static final int SOURCE_SUGGESTION       = 3;
+
+
     public static final String NOT_AVAILABLE = "Non disponible";
 
     // In seconds
@@ -26,6 +31,7 @@ public class Parameters {
 
     // Local Storage
     public static final String STORAGE_HISTORY = "STORAGE_HISTORY";
+    public static final String STORAGE_FAVORITES = "STORAGE_FAVORITES";
     public static final String DATA = "DATA";
 
     public static final int SIZE_MAX_HISTORY = 100;
