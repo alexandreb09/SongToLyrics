@@ -26,6 +26,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
 
+import static com.example.songtolyrics.Parameters.SOURCE_FAVORITE;
 import static com.example.songtolyrics.Parameters.SOURCE_LOCAL_STORAGE;
 
 
@@ -54,7 +55,7 @@ public class AccueilFragment extends Fragment {
         mParentview = inflater.inflate(R.layout.fragment_accueil, container, false);
 
         Button btn_reccord              = mParentview.findViewById(R.id.homepage_btn_record);
-        Button btn_historique           = mParentview.findViewById(R.id.homepage_btn_historique);
+        Button btn_favoris              = mParentview.findViewById(R.id.homepage_btn_favoris);
         Button btn_listMusique          = mParentview.findViewById(R.id.homepage_btn_show_musics);
         Button btn_lyrics               = mParentview.findViewById(R.id.homepage_btn_search_lyrics);
         Button btn_spotify              = mParentview.findViewById(R.id.homepage_btn_spotify_connect);
@@ -91,8 +92,9 @@ public class AccueilFragment extends Fragment {
             }
         });
 
-        btn_historique.setOnClickListener(v -> {
-            NavDirections action = AccueilFragmentDirections.actionAccueilFragmentToHistoryFragment();
+        btn_favoris.setOnClickListener(v -> {
+            AccueilFragmentDirections.ActionAccueilFragmentToListMusicFragment action =
+                AccueilFragmentDirections.actionAccueilFragmentToListMusicFragment("","", SOURCE_FAVORITE);
             Navigation.findNavController(mParentview).navigate(action);
         });
 

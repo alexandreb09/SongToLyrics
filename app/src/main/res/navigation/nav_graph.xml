@@ -20,9 +20,6 @@
             android:id="@+id/action_accueilFragment_to_reccordFragment"
             app:destination="@id/reccordFragment" />
         <action
-            android:id="@+id/action_accueilFragment_to_historyFragment"
-            app:destination="@id/historyFragment" />
-        <action
             android:id="@+id/action_accueilFragment_to_spotifyConnectFragment"
             app:destination="@id/spotifyConnectFragment" />
     </fragment>
@@ -68,15 +65,6 @@
         tools:layout="@layout/fragment_reccord" >
         <action
             android:id="@+id/action_reccordFragment_to_lyricsFragment"
-            app:destination="@id/HomeFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/historyFragment"
-        android:name="com.example.songtolyrics.fragments.HistoryFragment"
-        android:label="fragment_history"
-        tools:layout="@layout/fragment_history" >
-        <action
-            android:id="@+id/action_historyFragment_to_lyricsFragment"
             app:destination="@id/HomeFragment" />
     </fragment>
     <fragment

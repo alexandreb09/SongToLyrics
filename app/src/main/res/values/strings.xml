@@ -7,12 +7,13 @@
     <string name="homepage_search_lyrics">Rechercher paroles</string>
     <string name="homepage_btn_show_musics">Musiques locales</string>
     <string name="homepage_record_search_lyrics">Enregistrer et cherche lyrics</string>
-    <string name="homepage_historique">Historique</string>
+    <string name="homepage_favoris">Favoris</string>
     <string name="homepage_recherche_description">Effectuer une recherche depuis:</string>
     <string name="homepage_spotify">Spotify</string>
 
     <string name="background_description">Image arrière plan</string>
     <string name="icon_favorite_description">Icone favoris</string>
+    <string name="icon_delete_description">Icone supprimer</string>
 
     <string name="history_txt_title">Historique</string>
     <string name="history_txt_date">Date</string>
@@ -21,6 +22,7 @@
     <string name="list_music_txt_advice_suggestion">Sélectionner une musique parmi les suggestions:</string>
     <string name="list_music_txt_advice_spotify">Sélectionner une musique</string>
     <string name="list_music_txt_advice_spotify_detail">Vos dernières écoutes sur Spotify…</string>
+    <string name="list_music_txt_advice_favoris_detail">Vos musiques préférées…</string>
     <string name="list_music_suggestion_loading">Recherche de suggestions…</string>
     <string name="list_music_suggestion_not_found_title">Aucune suggestion trouvéee.</string>
     <string name="list_music_suggestion_not_found_msg">Veuillez reessayer avec une autre chanson et/ou artiste.</string>
@@ -53,6 +55,7 @@
     <string name="txt_musique">Musique</string>
     <string name="txt_artiste">Artiste</string>
     <string name="txt_search">Rechercher</string>
+    <string name="txt_favorite">Favoris</string>
     <string name="txt_hey">Hey!</string>
 
     <string name="autorisation_acces_memoire_refuse">Accès mémoire refusé</string>
@@ -62,11 +65,7 @@
     <string name="message_lyrics_available">Paroles disponibles</string>
     <string name="message_lyrics_unavailable">Paroles indisponibles</string>
 
-
     <!-- Used in NavigationDrawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

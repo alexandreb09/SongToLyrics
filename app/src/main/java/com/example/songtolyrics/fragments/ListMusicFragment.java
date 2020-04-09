@@ -42,9 +42,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
 
+import static com.example.songtolyrics.Parameters.SOURCE_FAVORITE;
 import static com.example.songtolyrics.Parameters.SOURCE_LOCAL_STORAGE;
 import static com.example.songtolyrics.Parameters.SOURCE_SPOTIFY;
 import static com.example.songtolyrics.Parameters.SOURCE_SUGGESTION;
@@ -112,7 +112,7 @@ public class ListMusicFragment extends BaseFragment {
             ProgressBar progressBar = mParentview.findViewById(R.id.list_music_progressBar);
             progressBar.setVisibility(View.VISIBLE);
 
-            mAdapter = new MusicAdapter(mContext, new ArrayList<>(), mParentview);
+            mAdapter = new MusicAdapter(mContext, new ArrayList<>(), mParentview, SOURCE_SUGGESTION);
 
             // Add listener on order button (title - artist)
             setUpMusicOrderListener(mListMusics, mParentview);
@@ -133,13 +133,32 @@ public class ListMusicFragment extends BaseFragment {
                     if (!mListMusics.contains(m)) mListMusics.add(m);
                 }
 
-                mAdapter = new MusicAdapter(mContext, mListMusics, mParentview);
+                mAdapter = new MusicAdapter(mContext, mListMusics, mParentview, SOURCE_SPOTIFY);
                 // Populate recycler view
                 mRecyclerView.setAdapter(mAdapter);
 
                 // Add listener on order button (title - artist)
                 setUpMusicOrderListener(mListMusics, mParentview);
             });
+        }
+        // If the activity source is FAVORITES
+        else if (SOURCE_FAVORITE == mSource){
+            mListMusics = Utils.readFavoriteFromStorage(mContext);
+
+            // Update layout text
+            upper_txt.setText(mContext.getResources().getString(R.string.list_music_txt_advice_spotify));
+            middle_txt.setText(mContext.getResources().getString(R.string.txt_favorite));
+            lower_txt.setText(mArtist);
+
+
+            Collections.sort(mListMusics);
+            mAdapter = new MusicAdapter(mContext, mListMusics, mParentview, SOURCE_FAVORITE);
+
+            // Populate recycler view
+            mRecyclerView.setAdapter(mAdapter);
+
+            // Add listener on order button (title - artist)
+            setUpMusicOrderListener(mListMusics, mParentview);
         }
         // DEFAUT CASE: read music from local Storage
         else {
@@ -151,7 +170,7 @@ public class ListMusicFragment extends BaseFragment {
             // Read music from telephone (artist and title) and update content from history
             mListMusics = Utils.updateLyrics(mContext, Utils.readSong(mContext));
             Collections.sort(mListMusics);
-            mAdapter = new MusicAdapter(mContext, mListMusics, mParentview);
+            mAdapter = new MusicAdapter(mContext, mListMusics, mParentview, SOURCE_LOCAL_STORAGE);
 
             // Populate recycler view
             mRecyclerView.setAdapter(mAdapter);
@@ -299,7 +318,7 @@ public class ListMusicFragment extends BaseFragment {
                             List<Music> musics = Utils.updateLyrics(activity, response.getMusics());
 
                             // Populate recycler view
-                            MusicAdapter mAdapter = new MusicAdapter(activity, musics, view);
+                            MusicAdapter mAdapter = new MusicAdapter(activity, musics, view, SOURCE_SUGGESTION);
                             RecyclerView mRecyclerView = activityReference.get().findViewById(R.id.list_music_recycler_view);
                             mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
                             mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(activity));

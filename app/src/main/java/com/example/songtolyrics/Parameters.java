@@ -8,6 +8,7 @@ public class Parameters {
     public static final int SOURCE_SPOTIFY          = 1;
     public static final int SOURCE_LOCAL_STORAGE    = 2;
     public static final int SOURCE_SUGGESTION       = 3;
+    public static final int SOURCE_FAVORITE        = 4;
 
 
     public static final String NOT_AVAILABLE = "Non disponible";
