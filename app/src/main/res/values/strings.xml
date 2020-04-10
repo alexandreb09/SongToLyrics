@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">SongsToLyrics</string>
+    <string name="app_description">Projet Intégration</string>
+    <string name="app_description_noms">Alexandre Bort - Ghita Lahlou - Xin Zhang</string>
 
     <string name="homepage_title">Bienvenue!</string>
     <string name="homepage_sub_title">Retrouvez facilement les paroles des vos chansons préférées.</string>
@@ -27,6 +29,30 @@
     <string name="list_music_suggestion_not_found_title">Aucune suggestion trouvéee.</string>
     <string name="list_music_suggestion_not_found_msg">Veuillez reessayer avec une autre chanson et/ou artiste.</string>
 
+    <string name="record_title_up">Et si on reconnaissait automatiquement votre chanson ?</string>
+    <string name="record_title_middle">Vite, essayez!</string>
+    <string name="record_title_bottom">N\'hésitez pas augmenter le volume!</string>
+    <string name="record_in_progress">Enregistrement en cours…</string>
+    <string name="record_recognition_in_progress">Recherche musique…</string>
+    <string name="record_recognition_failed_title">Aucune musique n\'a été reconnue</string>
+    <string name="record_recognition_failed_detail">Conseil: le bruit réduit les chances de reconnaissance de la chanson.</string>
+    <string name="record_server_unavailable_title">Serveur non accessible</string>
+    <string name="record_server_unavailable_message">Veuillez vérifier les paramètres de connexion au server.</string>
+    <string name="record_time">5 s</string>
+    <string name="record_desc_reset">reset</string>
+    <string name="record_desc_start">start/stop</string>
+    <string name="record_check_connexion">Tentative de connexion au server\nVeuillez patienter…</string>
+
+    <string name="settings_server_connexion_success">Connexion réussie!</string>
+    <string name="settings_server_connexion_success_msg">La configuartion est automatiquement sauvegardée!</string>
+    <string name="settings_server_connexion_fail">Serveur non accessible</string>
+    <string name="settings_server_connexion_fail_msg">Veuillez vous assurez que le server est visible sur le réseau local</string>
+    <string name="settings_server_port">n° de port</string>
+    <string name="settings_server_port_example">5000</string>
+    <string name="settings_server_IP">IP (ou nom de domaine)</string>
+    <string name="settings_server_IP_example">192.168.1.52</string>
+    <string name="setting_https">HTTPS</string>
+
     <string name="audio_reccord_reccord_start_btn">Enregistrer</string>
     <string name="audio_reccord_reccord_end_btn">Fin</string>
     <string name="audio_reccord_play_start_btn">Lire</string>
@@ -46,26 +72,51 @@
     <string name="not_found_title">Aucun musique trouvée</string>
     <string name="not_found_message">Veuillez vérifier le nom de l\'artiste et le nom de la chanson. Il est également possible que cette chanson ne soit pas dans notre base de données.</string>
     <string name="not_found_image_description">Smiley image non trouvée</string>
-    <string name="not_found_suggestions">Suggestions</string>
+    <string name="not_found_suggestions">@string/txt_suggestions</string>
 
     <string name="spotify_connect_error_login">La connexion au compte Spotify a été annulée. Veuillez vous connecter pour continuer.</string>
+    <string name="spotify_connect_error_login_title">Connexion annulée.</string>
+    <string name="spotify_connect_error_login_message">Il semblerait que vous ayez annulé la connexion.</string>
     <string name="spotify_connect_connection">Connexion en cours…</string>
     <string name="spotify_connect_connect">Réessayer</string>
+    <string name="spotify_title_top">@string/txt_spotify</string>
+    <string name="spotify_title_middle">Connectez-vous!</string>
+    <string name="spotify_title_bottom">Connectez-vous avec votre compte Spotify et retrouvez vos dernières musiques écoutées!</string>
 
     <string name="txt_musique">Musique</string>
     <string name="txt_artiste">Artiste</string>
     <string name="txt_search">Rechercher</string>
+    <string name="txt_test_connexion">Tester connexion</string>
     <string name="txt_favorite">Favoris</string>
+    <string name="txt_reccord">Enregistrer</string>
     <string name="txt_hey">Hey!</string>
+    <string name="txt_logo">Logo</string>
+    <string name="txt_open">Ouvrir</string>
+    <string name="txt_close">Fermer</string>
+    <string name="txt_leave">Quitter</string>
+    <string name="txt_spotify">Spotify</string>
+    <string name="txt_suggestions">Suggestions</string>
 
     <string name="autorisation_acces_memoire_refuse">Accès mémoire refusé</string>
+    <string name="autorisation_acces_memoire_refuse_detail">L\'accès à la mémoire est nécessaire pour lire les musiques de votre téléphone.</string>
     <string name="autorisation_acces_micro_refuse">Accès micro refusé</string>
+    <string name="autorisation_acces_micro_refuse_detail">L\'accès au micro est nécessaire pour enregistrer les musiques.</string>
     <string name="error_message_default">Une erreur s\'est produite, veuillez réessayer.</string>
 
     <string name="message_lyrics_available">Paroles disponibles</string>
     <string name="message_lyrics_unavailable">Paroles indisponibles</string>
 
-    <!-- Used in NavigationDrawer -->
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="label_home">Accueil</string>
+    <string name="label_list_musics">Musiques téléphone</string>
+    <string name="label_spotify">Spotify</string>
+    <string name="label_record">Reconnaissance</string>
+    <string name="label_lyrics_result">Paroles</string>
+    <string name="label_setting">Paramètres</string>
+
+    <string name="menu_search">Accueil</string>
+    <string name="menu_list_musics_phone">Musiques téléphone</string>
+    <string name="menu_list_musics_favoris">Favoris</string>
+    <string name="menu_spotify">@string/label_spotify</string>
+    <string name="menu_record">Reconnaissance</string>
+    <string name="menu_setting">Paramètres</string>
 </resources>

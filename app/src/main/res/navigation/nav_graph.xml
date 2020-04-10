@@ -2,36 +2,18 @@
 <navigation xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    app:startDestination="@id/accueilFragment"
+    app:startDestination="@id/HomeFragment"
     android:id="@+id/nav_graph"
     >
     <fragment
-        android:id="@+id/accueilFragment"
-        android:name="com.example.songtolyrics.fragments.AccueilFragment"
-        android:label="fragment_accueil"
-        tools:layout="@layout/fragment_accueil">
-        <action
-            android:id="@+id/action_accueilFragment_to_listMusicFragment"
-            app:destination="@id/listMusicFragment" />
-        <action
-            android:id="@+id/action_accueilFragment_to_lyricsFragment"
-            app:destination="@id/HomeFragment" />
-        <action
-            android:id="@+id/action_accueilFragment_to_reccordFragment"
-            app:destination="@id/reccordFragment" />
-        <action
-            android:id="@+id/action_accueilFragment_to_spotifyConnectFragment"
-            app:destination="@id/spotifyConnectFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/listMusicFragment"
         android:name="com.example.songtolyrics.fragments.ListMusicFragment"
-        android:label="fragment_list_music"
+        android:label="@string/label_list_musics"
         tools:layout="@layout/fragment_list_music" >
         <argument
-            android:name="TITLE"
+            android:name="Title"
             app:argType="string" />
-        <argument android:name="ARTIST"
+        <argument android:name="Artist"
             app:argType="string" />
         <action
             android:id="@+id/action_listMusicFragment_to_lyricsFragment"
@@ -43,7 +25,7 @@
     <fragment
         android:id="@+id/HomeFragment"
         android:name="com.example.songtolyrics.fragments.HomeFragment"
-        android:label="fragment_home"
+        android:label="@string/label_home"
         tools:layout="@layout/fragment_home">
         <argument
             android:name="Artist"
@@ -56,31 +38,43 @@
             app:destination="@id/listMusicFragment" />
         <action
             android:id="@+id/action_HomeFragment_to_lyricsResultFragment"
-            app:destination="@id/lyricsResultFragment" />
+            app:destination="@id/lyricsResultFragment"
+            app:enterAnim="@anim/side_in"
+            app:exitAnim="@anim/side_out"
+            app:popEnterAnim="@anim/side_in"
+            app:popExitAnim="@anim/side_out" />
     </fragment>
     <fragment
         android:id="@+id/reccordFragment"
-        android:name="com.example.songtolyrics.fragments.ReccordFragment"
-        android:label="fragment_reccord"
+        android:name="com.example.songtolyrics.fragments.RecordFragment"
+        android:label="@string/label_record"
         tools:layout="@layout/fragment_reccord" >
         <action
-            android:id="@+id/action_reccordFragment_to_lyricsFragment"
+            android:id="@+id/action_reccordFragment_to_HomeFragment"
             app:destination="@id/HomeFragment" />
+        <action
+            android:id="@+id/action_reccordFragment_to_settingFragment"
+            app:destination="@id/settingFragment"
+            app:enterAnim="@anim/pop_in"
+            app:exitAnim="@anim/side_out"
+            app:popEnterAnim="@anim/pop_in"
+            app:popExitAnim="@anim/side_out" />
     </fragment>
     <fragment
         android:id="@+id/spotifyConnectFragment"
         android:name="com.example.songtolyrics.fragments.SpotifyConnectFragment"
-        android:label="fragment_spotify_connect"
+        android:label="@string/label_spotify"
         tools:layout="@layout/fragment_spotify_connect" >
         <action
             android:id="@+id/action_spotifyConnectFragment_to_listMusicFragment"
             app:destination="@id/listMusicFragment"
-            app:popUpTo="@id/accueilFragment" />
+            app:popUpTo="@id/spotifyConnectFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/lyricsResultFragment"
         android:name="com.example.songtolyrics.fragments.LyricsResultFragment"
-        android:label="fragment_lyrics_result"
+        android:label="@string/label_lyrics_result"
         tools:layout="@layout/fragment_lyrics_result" >
         <action
             android:id="@+id/action_lyricsResultFragment_to_HomeFragment"
@@ -90,5 +84,17 @@
         <argument
             android:name="Music"
             app:argType="com.example.songtolyrics.model.Music" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.example.songtolyrics.fragments.SettingFragment"
+        android:label="@string/label_setting"
+        tools:layout="@layout/fragment_setting" >
+        <action
+            android:id="@+id/action_settingFragment_to_HomeFragment"
+            app:destination="@id/HomeFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/reccordFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

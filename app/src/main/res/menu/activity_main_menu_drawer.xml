@@ -5,21 +5,25 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/activity_main_drawer_news"
-            android:title="Fil d'actualité" />
+            android:id="@+id/HomeFragment"
+            android:title="@string/menu_search"
+            android:icon="@drawable/ic_search"/>
+        <item
+            android:id="@+id/listMusicLocalFragment"
+            android:title="@string/menu_list_musics_phone"
+            android:icon="@drawable/ic_list"/>
+        <item
+            android:id="@+id/listFavorisFragment"
+            android:title="@string/menu_list_musics_favoris"
+            android:icon="@drawable/ic_star"/>
+        <item
+            android:id="@+id/reccordFragment"
+            android:title="@string/menu_record"
+            android:icon="@drawable/ic_microphone"
+            />
+        <item
+            android:id="@+id/spotifyConnectFragment"
+            android:title="@string/menu_spotify"
+            android:icon="@drawable/ic_spotify_sketch"/>
     </group>
-
-    <item android:title="Configuration">
-        <menu>
-            <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/activity_main_drawer_profile"
-                    android:title="Profil" />
-                <item
-                    android:id="@+id/activity_main_drawer_settings"
-                    android:title="Paramètres" />
-            </group>
-        </menu>
-    </item>
-
 </menu>

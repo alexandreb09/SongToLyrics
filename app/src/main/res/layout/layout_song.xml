@@ -42,8 +42,7 @@
             android:fontFamily="@font/calibri"
             android:textStyle="bold"
             android:textColor="@color/purple_fade"
-            android:paddingTop="3dp"
-            android:text="Ceci est un nson"/>
+            android:paddingTop="3dp"/>
 
         <TextView
             android:id="@+id/song_artist"
@@ -52,7 +51,6 @@
             android:textSize="15sp"
             android:layout_weight="1.2"
             android:paddingTop="3dp"
-            android:text="TEST"
             android:textAlignment="textEnd"
             android:gravity="end"
 

@@ -16,6 +16,7 @@
         android:orientation="vertical"
         >
 
+
         <!-- Toolbar -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/activity_main_toolbar"
@@ -27,15 +28,14 @@
 
         <!-- Layout to contain contents of main body
              of screen (drawer will slide over this) -->
-        <!-- FrameLayout for our fragments -->
         <fragment
             android:name="androidx.navigation.fragment.NavHostFragment"
-            android:id="@+id/activity_main_nav_host_fragment"
+            android:id="@+id/nav_host_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:defaultNavHost="true"
-            app:navGraph="@navigation/nav_graph" />
-
+            />
+<!--            app:navGraph="@navigation/nav_graph"-->
     </LinearLayout>
 
     <!-- 2 | NavigationView -->

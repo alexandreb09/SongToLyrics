@@ -31,8 +31,8 @@ public class Music implements Comparable<Music>, Parcelable {
     private String lyrics;
 
     public Music(String title, String artist) {
-        this.artist = artist;
-        cleanAndSetTitle(title);
+        this.artist = artist.replaceAll("-", "");
+        cleanAndSetTitle(title.replaceAll("-", ""));
         this.lyrics = "";
         this.alreadySearch = false;
     }
@@ -61,11 +61,13 @@ public class Music implements Comparable<Music>, Parcelable {
         this.alreadySearch = false;
     }
 
-    public void setTitle(String title_){ this.title = StringUtils.capitalize(title_);}
+    public void setTitle(String title_){
+        this.title = capitalizeAll(title_);
+    }
     public String getTitle(){
         return title;
     }
-    public void setArtist(String artist_){ this.artist = StringUtils.capitalize(artist_);}
+    public void setArtist(String artist_){ this.artist = capitalizeAll(artist_);}
     public String getArtist(){
         return artist;
     }
@@ -137,6 +139,14 @@ public class Music implements Comparable<Music>, Parcelable {
     private static int ftIndex(String s) {
         Matcher matcher = Pattern.compile("(ft|feat|ft.)").matcher(s);
         return matcher.find() ? matcher.start() : -1;
+    }
+
+    private String capitalizeAll(String str){
+        StringBuilder out = new StringBuilder();
+        for (String s: str.split(" ")){
+            out.append(StringUtils.capitalize(s)).append(" ");
+        }
+        return out.toString();
     }
 
     @Override

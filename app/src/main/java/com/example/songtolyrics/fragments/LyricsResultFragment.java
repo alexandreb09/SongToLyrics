@@ -41,6 +41,10 @@ public class LyricsResultFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_lyrics_result, container, false);
 
+        // Set toolbar title
+        String toolBarTitle = mContext.getResources().getString(R.string.label_lyrics_result);
+        Utils.setToolbarTitle(getActivity(), toolBarTitle);
+
         // Find view
         TextView lyrics_view = view.findViewById(R.id.lyrics_result_lyrics);
         TextView title_middle_view = view.findViewById(R.id.lyrics_result_title_middle);

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.songtolyrics.Parameters.DATA_SPOTIFY;
 import static com.example.songtolyrics.Parameters.SPOTIFY_URL_RECENTLY_PLAYED;
 
 public class SpotifySongService {
@@ -29,7 +30,7 @@ public class SpotifySongService {
     private RequestQueue queue;
 
     public SpotifySongService(Context context) {
-        sharedPreferences = context.getSharedPreferences("SPOTIFY", 0);
+        sharedPreferences = context.getSharedPreferences(DATA_SPOTIFY, 0);
         queue = Volley.newRequestQueue(context);
     }
 

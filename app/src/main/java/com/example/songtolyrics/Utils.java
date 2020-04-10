@@ -1,5 +1,7 @@
 package com.example.songtolyrics;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,6 +12,7 @@ import android.os.Environment;
 import android.widget.Toast;
 
 import com.example.songtolyrics.model.Music;
+import com.example.songtolyrics.model.ServerConfig;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -19,13 +22,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
 import static android.content.Context.MODE_PRIVATE;
 import static com.example.songtolyrics.Parameters.API_PYTHON_FILENAME;
+import static com.example.songtolyrics.Parameters.API_PYTHON_PORT;
+import static com.example.songtolyrics.Parameters.API_PYTHON_URL;
 import static com.example.songtolyrics.Parameters.DATA;
 import static com.example.songtolyrics.Parameters.SIZE_MAX_HISTORY;
 import static com.example.songtolyrics.Parameters.SIZE_MAX_HISTORY_KEY;
 import static com.example.songtolyrics.Parameters.STORAGE_FAVORITES;
 import static com.example.songtolyrics.Parameters.STORAGE_HISTORY;
+import static com.example.songtolyrics.Parameters.STORAGE_PYTHON_SERVER_KEY;
 
 
 public class Utils {
@@ -263,5 +272,36 @@ public class Utils {
     private static void showToastError(Context context, String message){
         Toast toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
         toast.show();
+    }
+
+    // ======================================================//
+    //                    CHECK CONNEXION                    //
+    // ======================================================//
+    public static ServerConfig getPythonServerParams(Context context){
+        SharedPreferences mSharedPreferences = context.getSharedPreferences(DATA, MODE_PRIVATE);
+
+        Type type = new TypeToken<ServerConfig>(){}.getType();
+        String jsonServer = mSharedPreferences.getString(STORAGE_PYTHON_SERVER_KEY, "");
+        ServerConfig serverConfig = new Gson().fromJson(jsonServer, type);
+        if (null == serverConfig) serverConfig = new ServerConfig(API_PYTHON_URL, API_PYTHON_PORT, false);
+        return serverConfig;
+    }
+
+    public static void storePythonServerParams(Context context, ServerConfig serverConfig){
+        SharedPreferences.Editor editor = context.getSharedPreferences(DATA, MODE_PRIVATE).edit();
+
+        String jsonServer = new Gson().toJson(serverConfig);
+        editor.putString(STORAGE_PYTHON_SERVER_KEY, jsonServer);
+        editor.apply();
+    }
+
+
+    //======================================
+    public static void setToolbarTitle(Activity activity, String title){
+        if (null != activity){
+            ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
+            if (null != actionBar)
+                actionBar.setTitle(title);
+        }
     }
 }

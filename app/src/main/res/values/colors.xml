@@ -9,4 +9,8 @@
     <color name="purple_fade">#7854CA</color>
     <color name="grey">#FF8A99AF</color>
     <color name="green">#4CAF50</color>
+
+    <!--TEST-->
+    <color name="colorBackground">#151B29</color>
+    <color name="colorYellow">@color/colorAccent</color>
 </resources>

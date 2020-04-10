@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.Navigation;
 
@@ -47,7 +48,6 @@ public class HomeFragment extends BaseFragment {
 
     private EditText mSongName;
     private EditText mArtistName;
-    private TextView mResponseView;
     private ProgressBar mProgressBar;
 
     private RetrieveFeedTask mRunningTask;
@@ -74,7 +74,9 @@ public class HomeFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View mParentView = inflater.inflate(R.layout.fragment_home, container, false);
 
-//        mResponseView   = mParentView.findViewById(R.id.responseView);
+        String toolBarTitle = mContext.getResources().getString(R.string.menu_search);
+        Utils.setToolbarTitle(getActivity(), toolBarTitle);
+
         mSongName       = mParentView.findViewById(R.id.songName);
         mArtistName     = mParentView.findViewById(R.id.artistName);
         mProgressBar    = mParentView.findViewById(R.id.progressBar);
@@ -111,7 +113,7 @@ public class HomeFragment extends BaseFragment {
             // A similar research have already been done with no success
             //      -> directly redirect to not found activity
             else{
-                startNotFoundActivity(getActivity(), mContext, mParentView, song, artist);
+                showNotFoundDialog(getActivity(), mContext, mParentView, song, artist);
                 mQueryButton.setEnabled(true);
             }
         });
@@ -134,7 +136,7 @@ public class HomeFragment extends BaseFragment {
      * @param title: song title not found
      * @param artist: artist not found
      */
-    private static void startNotFoundActivity(FragmentActivity fragmentActivity,
+    private static void showNotFoundDialog(FragmentActivity fragmentActivity,
                                               Context context,
                                               View view,
                                               String title,
@@ -255,7 +257,7 @@ public class HomeFragment extends BaseFragment {
                     Utils.storeMusicHistory(activity, this.musicHistory);
 
                     // Start not found activity
-                    HomeFragment.startNotFoundActivity(activity, activity.getApplicationContext(),view, song, artist);
+                    HomeFragment.showNotFoundDialog(activity, activity.getApplicationContext(),view, song, artist);
                 }
             }
         }
