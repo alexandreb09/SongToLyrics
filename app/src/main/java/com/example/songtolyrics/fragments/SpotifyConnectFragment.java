@@ -32,7 +32,6 @@ import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
 
-
 public class SpotifyConnectFragment extends BaseFragment {
     private SharedPreferences.Editor editor;
     private SharedPreferences msharedPreferences;
@@ -60,9 +59,7 @@ public class SpotifyConnectFragment extends BaseFragment {
         mButtonConnexion    = mParentView.findViewById(R.id.spotify_connect_btn_connect);
         Button buttonExit   = mParentView.findViewById(R.id.spotify_connect_leave);
         mButtonConnexion.setOnClickListener(v -> authenticateSpotify());
-        buttonExit.setOnClickListener(v -> {
-            Navigation.findNavController(mParentView).popBackStack();
-        });
+        buttonExit.setOnClickListener(v -> Navigation.findNavController(mParentView).popBackStack());
 
         // Automatically connect when page loads
         authenticateSpotify();
@@ -97,14 +94,17 @@ public class SpotifyConnectFragment extends BaseFragment {
         TextView result_error = mParentView.findViewById(R.id.spotify_connect_text);
         result_error.setText(mContext.getResources().getText(R.string.spotify_connect_connection));
 
-        FragmentActivity activity = getActivity();
         AuthenticationRequest.Builder builder =
-                new AuthenticationRequest.Builder(Parameters.SPOTIFY_CLIENT_ID, AuthenticationResponse.Type.TOKEN, Parameters.SPOTIFY_REDIRECT_URI);
+                new AuthenticationRequest.Builder(Parameters.SPOTIFY_CLIENT_ID,
+                        AuthenticationResponse.Type.TOKEN,
+                        Parameters.SPOTIFY_REDIRECT_URI);
 
         builder.setScopes(new String[]{Parameters.SPOTIFY_SCOPES});
         AuthenticationRequest request = builder.build();
 
-        if (null != activity){
+        FragmentActivity activity = getActivity();
+
+        if (null != activity ){
             Intent intent = AuthenticationClient.createLoginActivityIntent(activity, request);
             startActivityForResult(intent, Parameters.SPOTIFY_REQUEST_CODE);
         }
@@ -164,5 +164,10 @@ public class SpotifyConnectFragment extends BaseFragment {
         progressBar.setVisibility(View.GONE);
 
         mButtonConnexion.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 }

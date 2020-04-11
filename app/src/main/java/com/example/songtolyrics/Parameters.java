@@ -29,9 +29,9 @@ public class Parameters {
     public static final int SPOTIFY_REQUEST_CODE            = 1337;
     public static final String SPOTIFY_URL_RECENTLY_PLAYED  = "https://api.spotify.com/v1/me/player/recently-played";
     public static final String SPOTIFY_USER_NAME            = "SPOTIFY_USER_NAME";
-    public static final String SPOTIFY_CLIENT_ID            = "3a7b0154a0fd4a868e41d59834f97bd5";
-    public static final String SPOTIFY_REDIRECT_URI         = "com.spotifyapiexample://callback";
-    public static final String SPOTIFY_SCOPES               = "user-read-recently-played,user-library-modify,user-library-read,playlist-modify-public,playlist-modify-private,user-read-email,user-read-private,user-read-birthdate,playlist-read-private,playlist-read-collaborative";
+    public static final String SPOTIFY_CLIENT_ID            = "018b237a3da84c11b73d0501ea09327f";
+    public static final String SPOTIFY_REDIRECT_URI         = "com.example.songtolyrics://callback";
+    public static final String SPOTIFY_SCOPES               = "user-read-recently-played";
 
 
     // ORION API

@@ -100,6 +100,8 @@ public class ListMusicFragment extends BaseFragment {
 
         String toolBarTitle;
 
+        mListMusics = new ArrayList<>();
+
         // If the activity source is looking for suggestion
         if (SOURCE_SUGGESTION == mSource){
             toolBarTitle = mContext.getResources().getString(R.string.txt_suggestions);
@@ -210,7 +212,9 @@ public class ListMusicFragment extends BaseFragment {
 //        });
 
         // Add listener on order button (title - artist)
-        setUpMusicOrderListener(mListMusics, mParentview);
+//        if (mListMusics != null){
+//            setUpMusicOrderListener(mListMusics, mParentview);
+//        }
 
         return mParentview;
     }
@@ -233,38 +237,44 @@ public class ListMusicFragment extends BaseFragment {
 
         // Update sort order from song
         mSortSongBtn.setOnClickListener(v -> {
-            Collections.sort(songList);
-            if (songOrder){
-                Collections.reverse(songList);
-            }
-            mAdapter.notifyDataSetChanged();
-            // Update song - artist order
-            songOrder = !songOrder;
-            artistOrder = false;
+            if (songList != null){
 
-            int drawable = songOrder ? R.drawable.ic_arrow_downward_black_24dp : R.drawable.ic_arrow_upward_black_24dp;
-            mSortSongBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, 0, 0, 0);
-            mSortArtistesBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,0,0);
+                Collections.sort(songList);
+                if (songOrder){
+                    Collections.reverse(songList);
+                }
+                mAdapter.notifyDataSetChanged();
+                // Update song - artist order
+                songOrder = !songOrder;
+                artistOrder = false;
+
+                int drawable = songOrder ? R.drawable.ic_arrow_downward_black_24dp : R.drawable.ic_arrow_upward_black_24dp;
+                mSortSongBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, 0, 0, 0);
+                mSortArtistesBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,0,0);
+            }
         });
 
         // Update sort order from artist
         mSortArtistesBtn.setOnClickListener(v -> {
-            // Sort list
-            Collections.sort(songList, (m1, m2) -> {
-                return m1.getArtist().compareToIgnoreCase(m2.getArtist()); // To compare string values
-            });
-            // Reverse if asked
-            if (artistOrder){
-                Collections.reverse(songList);
-            }
-            mAdapter.notifyDataSetChanged();
-            // Update song - artist order
-            songOrder = false;
-            artistOrder = !artistOrder;
+            if (songList != null){
 
-            int drawable = artistOrder ? R.drawable.ic_arrow_downward_black_24dp : R.drawable.ic_arrow_upward_black_24dp;
-            mSortArtistesBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, 0, 0, 0);
-            mSortSongBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,0,0);
+                // Sort list
+                Collections.sort(songList, (m1, m2) -> {
+                    return m1.getArtist().compareToIgnoreCase(m2.getArtist()); // To compare string values
+                });
+                // Reverse if asked
+                if (artistOrder){
+                    Collections.reverse(songList);
+                }
+                mAdapter.notifyDataSetChanged();
+                // Update song - artist order
+                songOrder = false;
+                artistOrder = !artistOrder;
+
+                int drawable = artistOrder ? R.drawable.ic_arrow_downward_black_24dp : R.drawable.ic_arrow_upward_black_24dp;
+                mSortArtistesBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, 0, 0, 0);
+                mSortSongBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,0,0);
+            }
         });
     }
 

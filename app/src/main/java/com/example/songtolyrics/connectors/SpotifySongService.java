@@ -39,8 +39,8 @@ public class SpotifySongService {
     }
 
     public ArrayList<Music> getRecentlyPlayedTracks(final VolleyCallBack callBack) {
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, SPOTIFY_URL_RECENTLY_PLAYED, null, response -> {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET, SPOTIFY_URL_RECENTLY_PLAYED, null, response -> {
                     Gson gson = new Gson();
                     JSONArray jsonArray = response.optJSONArray("items");
                     for (int n = 0; n < jsonArray.length(); n++) {
@@ -68,7 +68,7 @@ public class SpotifySongService {
                     callBack.onSuccess();
                 }, error -> {
                     // TODO: Handle error
-
+                    String temp = "Error";
                 }) {
             @Override
             public Map<String, String> getHeaders() {
@@ -76,6 +76,7 @@ public class SpotifySongService {
                 String token = sharedPreferences.getString("token", "");
                 String auth = "Bearer " + token;
                 headers.put("Authorization", auth);
+                headers.put("Content-Type", "application/json");
                 return headers;
             }
         };
