@@ -96,6 +96,8 @@
     <string name="txt_leave">Quitter</string>
     <string name="txt_spotify">Spotify</string>
     <string name="txt_suggestions">Suggestions</string>
+    <string name="txt_lyrics_available">Paroles disponibles</string>
+    <string name="txt_lyrics_unavailable">Paroles indisponibles</string>
 
     <string name="autorisation_acces_memoire_refuse">Accès mémoire refusé</string>
     <string name="autorisation_acces_memoire_refuse_detail">L\'accès à la mémoire est nécessaire pour lire les musiques de votre téléphone.</string>
@@ -103,8 +105,6 @@
     <string name="autorisation_acces_micro_refuse_detail">L\'accès au micro est nécessaire pour enregistrer les musiques.</string>
     <string name="error_message_default">Une erreur s\'est produite, veuillez réessayer.</string>
 
-    <string name="message_lyrics_available">Paroles disponibles</string>
-    <string name="message_lyrics_unavailable">Paroles indisponibles</string>
 
     <string name="label_home">Accueil</string>
     <string name="label_list_musics">Musiques téléphone</string>

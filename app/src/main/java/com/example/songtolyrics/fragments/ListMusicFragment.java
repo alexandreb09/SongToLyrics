@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -145,6 +144,9 @@ public class ListMusicFragment extends BaseFragment {
                 for (Music m: songService.getSongs()){
                     if (!mListMusics.contains(m)) mListMusics.add(m);
                 }
+                // Update from previous search
+                Utils.updateLyrics(mContext, mListMusics);
+
 
                 mAdapter = new MusicAdapter(mContext, mListMusics, mParentview, SOURCE_SPOTIFY);
                 // Populate recycler view
@@ -158,7 +160,12 @@ public class ListMusicFragment extends BaseFragment {
         else if (SOURCE_FAVORITE == mSource){
             toolBarTitle = mContext.getResources().getString(R.string.txt_favorite);
 
+            // Read favorites from storage
             mListMusics = Utils.readFavoriteFromStorage(mContext);
+            // Because they are in favorite, they have been already searched
+            for (Music m: mListMusics){
+                m.setAlreadySearch(true);
+            }
 
             // Update layout text
             upper_txt.setText(mContext.getResources().getString(R.string.list_music_txt_advice_spotify));

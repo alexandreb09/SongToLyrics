@@ -46,7 +46,7 @@ public class Parameters {
     public static final String DATA = "DATA";
     public static final String DATA_SPOTIFY = "DATA_SPOTIFY";
 
-    public static final int SIZE_MAX_HISTORY = 100;
+    public static final int SIZE_MAX_HISTORY = 200;
     public static final String SIZE_MAX_HISTORY_KEY = "SIZE_MAX_HISTORY";
 }
 

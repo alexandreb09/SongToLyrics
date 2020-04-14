@@ -126,8 +126,8 @@ public class Utils {
         SharedPreferences mSharedPreferences = context.getSharedPreferences(DATA, MODE_PRIVATE);
         SharedPreferences.Editor listeEditor = mSharedPreferences.edit();
 
-        String jsonProduit = new Gson().toJson(musics_history);
-        listeEditor.putString(STORAGE_HISTORY, jsonProduit);
+        String jsonMusic = new Gson().toJson(musics_history);
+        listeEditor.putString(STORAGE_HISTORY, jsonMusic);
         listeEditor.apply();
     }
 

@@ -4,12 +4,12 @@ public class ServerConfig {
 
     private String IP;
     private String port;
-    private  boolean HTTP;
+    private  boolean HTTPS;
 
-    public ServerConfig(String IP, String port, boolean HTTP) {
+    public ServerConfig(String IP, String port, boolean HTTPS) {
         this.IP = IP;
         this.port = port;
-        this.HTTP = HTTP;
+        this.HTTPS = HTTPS;
     }
 
 
@@ -29,21 +29,23 @@ public class ServerConfig {
         this.port = port;
     }
 
-    public boolean isHTTP() {
-        return HTTP;
+    public boolean isHTTPS() {
+        return HTTPS;
     }
 
-    public void setHTTP(boolean HTTP) {
-        this.HTTP = HTTP;
+    public void setHTTPS(boolean HTTPS) {
+        this.HTTPS = HTTPS;
     }
 
     public String getHTTPStr(){
-        if (HTTP) return "http";
-        else return "https";
+        if (HTTPS){
+            return "https";
+        }
+        return "http";
     }
 
     public String getUrl(String method){
-        return this.getHTTPStr() + "://" + IP + ":" + port + "/" + method;
+        return this.getUrl() + "/" + method;
     }
 
     public String getUrl(){

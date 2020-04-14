@@ -241,6 +241,15 @@ public class HomeFragment extends BaseFragment {
                     // Add music to history and store it
                     Music music = new Music(responseOrion);
                     musicHistory = Utils.addMusic(activity, musicHistory, music);
+
+                    // Face different name used for same music between Spotify and Orion
+                    if (!music.getArtist().equals(artist) || !music.getTitle().equals(song)){
+                        Music music_2 = new Music(song, artist);
+                        music_2.setLyrics(music.getLyrics());
+                        music_2.setAlreadySearch(true);
+                        musicHistory = Utils.addMusic(activity, musicHistory, music_2);
+                    }
+                    // Store in history
                     Utils.storeMusicHistory(activity, this.musicHistory);
 
                     // Show results

@@ -66,7 +66,7 @@ public class SettingFragment extends BaseFragment{
         ServerConfig serverConfig = Utils.getPythonServerParams(mContext);
         mServerIP.setText(serverConfig.getIP());
         mServerPort.setText(serverConfig.getPort());
-        mIsHTTPS.setChecked(serverConfig.isHTTP());
+        mIsHTTPS.setChecked(serverConfig.isHTTPS());
 
         addOnTextChangeListeners();
 
@@ -74,10 +74,11 @@ public class SettingFragment extends BaseFragment{
             mLoading.setVisibility(View.VISIBLE);
             mButtonTest.setEnabled(false);
 
-            // Run Test connexion
-            new TestConnexionTask(getActivity(), new ServerConfig(mServerIP.getText().toString(),
+            ServerConfig current_server_config = new ServerConfig(mServerIP.getText().toString(),
                     mServerPort.getText().toString(),
-                    mIsHTTPS.isChecked()))
+                    mIsHTTPS.isChecked());
+            // Run Test connexion
+            new TestConnexionTask(getActivity(), current_server_config)
                     .execute();
         });
 
@@ -89,8 +90,8 @@ public class SettingFragment extends BaseFragment{
 
 
     private void updateURL(){
-        String url = "$1://$2:$3";
-        url = url.replace("$1", mIsHTTPS.isChecked() ? "https" : "http")
+        String url = "$1://$2:$3"
+                .replace("$1", mIsHTTPS.isChecked() ? "https" : "http")
                 .replace("$3", mServerPort.getText())
                 .replace("$2", mServerIP.getText());
         mAdress.setText(url);
@@ -201,7 +202,7 @@ public class SettingFragment extends BaseFragment{
                         .OnNegativeClicked(() -> {
                             SettingFragmentDirections.ActionSettingFragmentToHomeFragment action =
                                     SettingFragmentDirections.actionSettingFragmentToHomeFragment("","");
-                            Navigation.findNavController(view).popBackStack(R.id.reccordFragment, true);
+//                            Navigation.findNavController(view).popBackStack(R.id.reccordFragment, true);
                             Navigation.findNavController(view).navigate(action);
                         })
                         .build();

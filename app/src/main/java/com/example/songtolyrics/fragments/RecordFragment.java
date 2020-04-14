@@ -317,7 +317,7 @@ public class RecordFragment extends BaseFragment implements View.OnClickListener
                 if (success){
                     TextView connexionTest = view.findViewById(R.id.record_connexion_server_txt);
                     ImageView imageViewStart = view.findViewById(R.id.record_start_stop);
-                    ImageView timeTxt = view.findViewById(R.id.record_time_txt);
+                    TextView timeTxt = view.findViewById(R.id.record_time_txt);
                     Button recordButton = view.findViewById(R.id.record_record_btn);
                     ProgressBar progressBar1 = view.findViewById(R.id.record_progress_bar_record);
                     ProgressBar progressBar2 = view.findViewById(R.id.record_progress_bar_recognition);
@@ -362,9 +362,10 @@ public class RecordFragment extends BaseFragment implements View.OnClickListener
         }
 
         protected String doInBackground(Void... urls) {
+            ServerConfig serverConfig = Utils.getPythonServerParams(activityReference.get().getApplicationContext());
             URL url;
             try {
-                url = new URL(API_PYTHON_URL + ":" + API_PYTHON_PORT + "/" + API_PYTHON_METHOD);
+                url = new URL(serverConfig.getUrl(API_PYTHON_METHOD));
             } catch (MalformedURLException e) {
                 e.printStackTrace();
                 return "";
@@ -472,7 +473,7 @@ public class RecordFragment extends BaseFragment implements View.OnClickListener
                 connection.disconnect();
             }
 
-            return new Music().toString();
+            return (new Music()).toString();
         }
 
         protected void onPostExecute(String response) {
@@ -505,14 +506,19 @@ public class RecordFragment extends BaseFragment implements View.OnClickListener
                     showNotFoundDialog(activity, view);
                 }
                 else {
-                    Music music = new Gson().fromJson(response, Music.class);
+                    Music music = null;
+                    try {
+                        music = new Gson().fromJson(response, Music.class);
+                    }catch (Exception ignored){}
 
-                    if (music.getTitle().equals("")){
+
+                    if (music != null && music.getTitle().equals("")){
                         showNotFoundDialog(activity, view);
                     }else{
                         // Run Lyrics search activity
                         RecordFragmentDirections.ActionReccordFragmentToHomeFragment action =
-                                RecordFragmentDirections.actionReccordFragmentToHomeFragment(music.getArtist(), music.getTitle());
+                                RecordFragmentDirections.actionReccordFragmentToHomeFragment(music != null ? music.getArtist() : "",
+                                        music != null ? music.getTitle(): "");
                         Navigation.findNavController(view).navigate(action);
                     }
                 }

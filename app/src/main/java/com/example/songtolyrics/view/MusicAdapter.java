@@ -50,8 +50,16 @@ public class MusicAdapter extends RecyclerView.Adapter<MyHolder>{
         holder.artist.setText(music.getArtist());
 
         holder.lyricsAvailable.setText(music.getLyricsAvailableString(this.mContext));
-        if (music.isLyricsAvailable()){
-            holder.lyricsAvailable.setTextColor(mContext.getResources().getColor(R.color.green));
+
+        // If this music search has already been performed
+        if (music.isAlreadySearch()){
+            // Show message if lyrics available
+            holder.lyricsAvailable.setText(music.getLyricsAvailableString(mContext));
+
+            // If lyrics unavailable -> grey color
+            if (!music.isLyricsAvailable()){
+                holder.lyricsAvailable.setTextColor(mContext.getResources().getColor(R.color.grey));
+            }
         }
 
         holder.setItemClickListener((v, pos) -> {

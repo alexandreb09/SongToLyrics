@@ -72,7 +72,7 @@ public class Music implements Comparable<Music>, Parcelable {
         return artist;
     }
     public boolean isLyricsAvailable() {
-        return null != this.lyrics && !this.lyrics.isEmpty();
+        return !(null == this.lyrics || this.lyrics.isEmpty());
     }
     public String getLyrics() {
         return lyrics;
@@ -90,9 +90,9 @@ public class Music implements Comparable<Music>, Parcelable {
     public String getLyricsAvailableString(Context context){
         if (isAlreadySearch()){
             if (isLyricsAvailable()){
-                return context.getResources().getString(R.string.message_lyrics_available);
+                return context.getResources().getString(R.string.txt_lyrics_available);
             }else{
-                return context.getResources().getString(R.string.message_lyrics_unavailable);
+                return context.getResources().getString(R.string.txt_lyrics_unavailable);
             }
         }else{
             return "";
@@ -160,7 +160,7 @@ public class Music implements Comparable<Music>, Parcelable {
         if (o == this) return true;
         if (!(o instanceof Music))return false;
         Music o_m = (Music) o;
-        return (title + artist).toLowerCase().equals((o_m.getTitle() + o_m.getArtist()).toLowerCase());
+        return (getTitle() + getArtist()).toLowerCase().equals((o_m.getTitle() + o_m.getArtist()).toLowerCase());
     }
 
     // PARCEL PART
