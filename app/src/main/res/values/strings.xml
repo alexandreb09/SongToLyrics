@@ -28,6 +28,8 @@
     <string name="list_music_suggestion_loading">Recherche de suggestions…</string>
     <string name="list_music_suggestion_not_found_title">Aucune suggestion trouvéee.</string>
     <string name="list_music_suggestion_not_found_msg">Veuillez reessayer avec une autre chanson et/ou artiste.</string>
+    <string name="list_music_spotify_disconnect">Se déconnecter</string>
+    <string name="list_music_spotify_disconnect_details">Vous pouvez vous reconnecter en revenant sur cette page </string>
 
     <string name="record_title_up">Et si on reconnaissait automatiquement votre chanson ?</string>
     <string name="record_title_middle">Vite, essayez!</string>

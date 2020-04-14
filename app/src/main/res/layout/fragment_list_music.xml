@@ -60,6 +60,20 @@
                 android:textAlignment="center"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/list_music_spotify_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_logout"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/list_music_txt_middle"
+                android:paddingEnd="10dp"
+                android:paddingStart="0dp"
+                android:paddingTop="10dp"
+                android:contentDescription="@string/list_music_spotify_disconnect"
+                android:visibility="gone"/>
+
         </RelativeLayout>
 
         <androidx.cardview.widget.CardView
@@ -76,7 +90,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center">
+                android:layout_gravity="center"
+                android:baselineAligned="false">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -110,7 +125,6 @@
                         android:gravity="center"
                         android:text="@string/txt_artiste"
                         android:drawablePadding="5dp"
-                        android:drawableTint="@color/green"
                         style="?android:attr/buttonBarButtonStyle"/>
                 </LinearLayout>
 
@@ -140,106 +154,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             />
 
-
-<!--        <androidx.cardview.widget.CardView-->
-<!--            android:id="@+id/cardView"-->
-<!--            android:layout_width="match_parent"-->
+<!--        <Button-->
+<!--            android:id="@+id/list_music_spotify_disconnect"-->
+<!--            android:layout_width="wrap_content"-->
 <!--            android:layout_height="wrap_content"-->
-
-<!--            app:cardCornerRadius="4dp"-->
-<!--            app:cardUseCompatPadding="true"-->
-<!--            android:foreground="?android:attr/selectableItemBackground"-->
-<!--            app:contentPadding="16dp">-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:weightSum="100">-->
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:layout_weight="60"-->
-<!--                    android:orientation="vertical">-->
-
-<!--                    <TextView-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:fontFamily="@font/calibri"-->
-<!--                        android:text="9:00AM - 12:30PM"-->
-<!--                        android:textStyle="bold"-->
-<!--                        android:textColor="#000000"-->
-<!--                        />-->
-<!--                    <TextView-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:fontFamily="@font/calibri"-->
-<!--                        android:text="Expo bus service"-->
-<!--                        android:textStyle="bold"-->
-<!--                        android:layout_marginTop="4dp"-->
-<!--                        android:layout_marginBottom="4dp"-->
-<!--                        android:textColor="#4b4b4b"-->
-<!--                        />-->
-<!--                    <TextView-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:fontFamily="@font/calibri"-->
-<!--                        android:text="A/C Sleeper (2+2)"-->
-<!--                        android:textColor="#8a8a8a"-->
-<!--                        />-->
-
-<!--                </LinearLayout>-->
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:layout_weight="40"-->
-<!--                    android:gravity="center"-->
-<!--                    android:orientation="vertical">-->
-<!--                    <TextView-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:fontFamily="@font/calibri"-->
-<!--                        android:text="$600.00"-->
-<!--                        android:textAlignment="textEnd"-->
-<!--                        android:textSize="24sp"-->
-<!--                        android:textStyle="bold"-->
-<!--                        android:textColor="#f5a622"-->
-<!--                        />-->
-<!--                    <TextView-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:fontFamily="@font/calibri"-->
-<!--                        android:text="3.30 Hour"-->
-<!--                        android:textAlignment="textEnd"-->
-<!--                        android:layout_marginTop="4dp"-->
-<!--                        android:layout_marginBottom="4dp"-->
-<!--                        android:textColor="#b3b3b3"-->
-<!--                        />-->
-<!--                </LinearLayout>-->
-<!--            </LinearLayout>-->
-
-<!--        </androidx.cardview.widget.CardView>-->
+<!--            android:text="@string/txt_leave"-->
+<!--            style="@style/ButtonStyle"-->
+<!--            android:background="@color/colorAccent"-->
+<!--            />-->
 
     </LinearLayout>
 </ScrollView>
-
-
-
-
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content">-->
-
-<!--        <Button-->
-<!--            style="@style/AppTheme"-->
-<!--            android:id="@+id/list_music_menu_button"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/btn_txt_acceuil"-->
-<!--            android:layout_marginStart="3dp"-->
-<!--            android:layout_marginLeft="3dp" />-->
-<!--    </LinearLayout>-->
-
-<!--</LinearLayout>-->

@@ -75,8 +75,8 @@ public class MusicAdapter extends RecyclerView.Adapter<MyHolder>{
                 TextView txt_view_artist = v.findViewById(R.id.song_artist);
                 String artist = txt_view_artist.getText().toString();
 
-                ListMusicFragmentDirections.ActionListMusicFragmentToLyricsFragment action =
-                        ListMusicFragmentDirections.actionListMusicFragmentToLyricsFragment(artist, song);
+                ListMusicFragmentDirections.ActionListMusicFragmentToHomeFragment action =
+                        ListMusicFragmentDirections.actionListMusicFragmentToHomeFragment(artist, song);
                 Navigation.findNavController(this.mFragmentView).navigate(action);
             }
         });

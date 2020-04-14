@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.fragment.app.FragmentActivity;
@@ -16,7 +17,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -55,6 +59,7 @@ import static com.example.songtolyrics.Parameters.SPOTIFY_USER_NAME;
 
 public class ListMusicFragment extends BaseFragment {
     private MusicAdapter mAdapter;
+    private View mParentView;
 
     private Boolean artistOrder;
     private Boolean songOrder;
@@ -87,14 +92,14 @@ public class ListMusicFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View mParentview = inflater.inflate(R.layout.fragment_list_music, container, false);
+        mParentView = inflater.inflate(R.layout.fragment_list_music, container, false);
 
-        TextView upper_txt  = mParentview.findViewById(R.id.list_music_txt_top);
-        TextView middle_txt = mParentview.findViewById(R.id.list_music_txt_middle);
-        TextView lower_txt  = mParentview.findViewById(R.id.list_music_txt_bottom);
+        TextView upper_txt  = mParentView.findViewById(R.id.list_music_txt_top);
+        TextView middle_txt = mParentView.findViewById(R.id.list_music_txt_middle);
+        TextView lower_txt  = mParentView.findViewById(R.id.list_music_txt_bottom);
 
         // RECYCLER VIEW
-        RecyclerView mRecyclerView  = mParentview.findViewById(R.id.list_music_recycler_view);
+        RecyclerView mRecyclerView  = mParentView.findViewById(R.id.list_music_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
         String toolBarTitle;
@@ -115,13 +120,13 @@ public class ListMusicFragment extends BaseFragment {
             lower_txt.setText(mArtist);
 
             // Show progress bar
-            ProgressBar progressBar = mParentview.findViewById(R.id.list_music_progressBar);
+            ProgressBar progressBar = mParentView.findViewById(R.id.list_music_progressBar);
             progressBar.setVisibility(View.VISIBLE);
 
-            mAdapter = new MusicAdapter(mContext, new ArrayList<>(), mParentview, SOURCE_SUGGESTION);
+            mAdapter = new MusicAdapter(mContext, new ArrayList<>(), mParentView, SOURCE_SUGGESTION);
 
             // Add listener on order button (title - artist)
-            setUpMusicOrderListener(mListMusics, mParentview);
+            setUpMusicOrderListener(mListMusics, mParentView);
         }
         // If the activity source is looking recently played spotify musics
         else if (SOURCE_SPOTIFY ==  mSource){
@@ -136,6 +141,9 @@ public class ListMusicFragment extends BaseFragment {
             lower_txt.setVisibility(View.VISIBLE);
             lower_txt.setText(msharedPreferences.getString(SPOTIFY_USER_NAME, ""));
 
+            ImageView logout = mParentView.findViewById(R.id.list_music_spotify_logout);
+            logout.setVisibility(View.VISIBLE);
+
             // Return musics from Spotify service
             SpotifySongService songService = new SpotifySongService(mContext);
             songService.getRecentlyPlayedTracks(() -> {
@@ -148,12 +156,14 @@ public class ListMusicFragment extends BaseFragment {
                 Utils.updateLyrics(mContext, mListMusics);
 
 
-                mAdapter = new MusicAdapter(mContext, mListMusics, mParentview, SOURCE_SPOTIFY);
+                mAdapter = new MusicAdapter(mContext, mListMusics, mParentView, SOURCE_SPOTIFY);
                 // Populate recycler view
                 mRecyclerView.setAdapter(mAdapter);
 
                 // Add listener on order button (title - artist)
-                setUpMusicOrderListener(mListMusics, mParentview);
+                setUpMusicOrderListener(mListMusics, mParentView);
+
+                logout.setOnClickListener(this::spotifyLogOut);
             });
         }
         // If the activity source is FAVORITES
@@ -174,13 +184,13 @@ public class ListMusicFragment extends BaseFragment {
 
 
             Collections.sort(mListMusics);
-            mAdapter = new MusicAdapter(mContext, mListMusics, mParentview, SOURCE_FAVORITE);
+            mAdapter = new MusicAdapter(mContext, mListMusics, mParentView, SOURCE_FAVORITE);
 
             // Populate recycler view
             mRecyclerView.setAdapter(mAdapter);
 
             // Add listener on order button (title - artist)
-            setUpMusicOrderListener(mListMusics, mParentview);
+            setUpMusicOrderListener(mListMusics, mParentView);
         }
         // DEFAUT CASE: read music from local Storage
         else {
@@ -194,36 +204,18 @@ public class ListMusicFragment extends BaseFragment {
             // Read music from telephone (artist and title) and update content from history
             mListMusics = Utils.updateLyrics(mContext, Utils.readSong(mContext));
             Collections.sort(mListMusics);
-            mAdapter = new MusicAdapter(mContext, mListMusics, mParentview, SOURCE_LOCAL_STORAGE);
+            mAdapter = new MusicAdapter(mContext, mListMusics, mParentView, SOURCE_LOCAL_STORAGE);
 
             // Populate recycler view
             mRecyclerView.setAdapter(mAdapter);
 
             // Add listener on order button (title - artist)
-            setUpMusicOrderListener(mListMusics, mParentview);
+            setUpMusicOrderListener(mListMusics, mParentView);
         }
 
         Utils.setToolbarTitle(getActivity(), toolBarTitle);
 
-
-
-        // ===================================== //
-        //                BUTTONS                //
-        // ===================================== //
-
-        // Return homepage
-//        mAccueilBtn.setOnClickListener(v -> {
-//            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//            startActivity(intent);
-//        });
-
-        // Add listener on order button (title - artist)
-//        if (mListMusics != null){
-//            setUpMusicOrderListener(mListMusics, mParentview);
-//        }
-
-        return mParentview;
+        return mParentView;
     }
 
     @Override
@@ -264,7 +256,6 @@ public class ListMusicFragment extends BaseFragment {
         // Update sort order from artist
         mSortArtistesBtn.setOnClickListener(v -> {
             if (songList != null){
-
                 // Sort list
                 Collections.sort(songList, (m1, m2) -> {
                     return m1.getArtist().compareToIgnoreCase(m2.getArtist()); // To compare string values
@@ -283,6 +274,44 @@ public class ListMusicFragment extends BaseFragment {
                 mSortSongBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,0,0);
             }
         });
+    }
+
+    private void spotifyLogOut(View v){
+
+        new FancyAlertDialog.Builder(getActivity())
+                .setTitle(mContext.getResources().getString(R.string.list_music_spotify_disconnect))
+                .setBackgroundColor(Color.parseColor("#F57C00"))
+                .setMessage(mContext.getResources().getString(R.string.list_music_spotify_disconnect_details))
+                .setNegativeBtnText("ANNULER")
+                .setNegativeBtnBackground(Color.parseColor("#FFA9A7A8"))
+                .setPositiveBtnText("OK")
+                .setPositiveBtnBackground(Color.parseColor("#F57C00"))
+                .setAnimation(Animation.POP)
+                .isCancellable(true)
+                .setIcon(R.drawable.ic_pan_tool_black_24dp, Icon.Visible)
+                .OnPositiveClicked(() -> {
+                    // Clear WebView cookies from : https://stackoverflow.com/a/31950789/10041823
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                        CookieManager.getInstance().removeAllCookies(null);
+                        CookieManager.getInstance().flush();
+                    }else {
+                        CookieSyncManager cookieSyncMngr=CookieSyncManager.createInstance(mContext);
+                        cookieSyncMngr.startSync();
+                        CookieManager cookieManager=CookieManager.getInstance();
+                        cookieManager.removeAllCookie();
+                        cookieManager.removeSessionCookie();
+                        cookieSyncMngr.stopSync();
+                        cookieSyncMngr.sync();
+                    }
+
+                    SharedPreferences.Editor editor = mContext.getSharedPreferences(Parameters.DATA_SPOTIFY, 0).edit();
+                    editor.clear();
+                    editor.apply();
+
+                    Navigation.findNavController(mParentView).popBackStack(R.id.HomeFragment, true);
+                })
+                .OnNegativeClicked(() -> {})
+                .build();
     }
 
 
