@@ -35,7 +35,7 @@ import com.shashank.sony.fancydialoglib.FancyAlertDialog;
 import com.shashank.sony.fancydialoglib.Icon;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
     private DrawerLayout mDrawerLayout;
     private String mHomeLabel;
     private String mMusicsLocalLabel;
@@ -113,12 +113,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean catchNavigation(MenuItem menuItem){
         // Hide drawer bar
         this.mDrawerLayout.closeDrawer(GravityCompat.START);
+        menuItem.setChecked(true);
 
         String itemTitle = menuItem.getTitle().toString();
         // Local Musics
         if (itemTitle.equals(mHomeLabel)){
             // This is for maintaining the behavior of the Navigation view
-            mNavController.popBackStack(R.id.HomeFragment, true);
+            mNavController.popBackStack(R.id.HomeFragment, false);
         }
         else if (itemTitle.equals(mMusicsLocalLabel)){
             if (permissionReadStorageGranted()){
@@ -204,7 +205,6 @@ public class MainActivity extends AppCompatActivity {
             // If request is cancelled, the result arrays are empty.
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 navigateToListMusic(Parameters.SOURCE_LOCAL_STORAGE);
-                // TODO: change source according to the request
             } else {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)){
                     Snackbar.make(parentView, R.string.autorisation_acces_memoire_refuse, Snackbar.LENGTH_LONG)

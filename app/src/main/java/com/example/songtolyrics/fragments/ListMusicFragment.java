@@ -64,12 +64,19 @@ public class ListMusicFragment extends BaseFragment {
     private Boolean artistOrder;
     private Boolean songOrder;
 
-    private RetrieveFeedTask mRunningTask;
+    private SuggestionTask mRunningTask;
 
     private String mTitle;
     private String mArtist;
     private int mSource;
     private List<Music> mListMusics;
+
+    private TextView mUpperTxtView;
+    private TextView mMiddleTxtView;
+    private TextView mLowerTxViewt;
+    private RecyclerView mRecyclerView;
+
+    private String mToolBarTitle;
 
     // Required empty public constructor
     public ListMusicFragment() {}
@@ -94,30 +101,44 @@ public class ListMusicFragment extends BaseFragment {
         // Inflate the layout for this fragment
         mParentView = inflater.inflate(R.layout.fragment_list_music, container, false);
 
-        TextView upper_txt  = mParentView.findViewById(R.id.list_music_txt_top);
-        TextView middle_txt = mParentView.findViewById(R.id.list_music_txt_middle);
-        TextView lower_txt  = mParentView.findViewById(R.id.list_music_txt_bottom);
+        mUpperTxtView  = mParentView.findViewById(R.id.list_music_txt_top);
+        mMiddleTxtView = mParentView.findViewById(R.id.list_music_txt_middle);
+        mLowerTxViewt  = mParentView.findViewById(R.id.list_music_txt_bottom);
 
         // RECYCLER VIEW
-        RecyclerView mRecyclerView  = mParentView.findViewById(R.id.list_music_recycler_view);
+        mRecyclerView  = mParentView.findViewById(R.id.list_music_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-
-        String toolBarTitle;
 
         mListMusics = new ArrayList<>();
 
+        setMusicContent();
+
+        Utils.setToolbarTitle(getActivity(), mToolBarTitle);
+
+        return mParentView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // Cancel running task(s) to avoid memory leaks
+        if (mRunningTask != null)
+            mRunningTask.cancel(true);
+    }
+
+    private void setMusicContent(){
         // If the activity source is looking for suggestion
         if (SOURCE_SUGGESTION == mSource){
-            toolBarTitle = mContext.getResources().getString(R.string.txt_suggestions);
+            mToolBarTitle = mContext.getResources().getString(R.string.txt_suggestions);
 
             // Start loading suggestion task
-            mRunningTask = new RetrieveFeedTask(mTitle, mArtist, getActivity());
+            mRunningTask = new SuggestionTask(mTitle, mArtist, getActivity());
             mRunningTask.execute();
 
             // Update layout text
-            upper_txt.setText(mContext.getResources().getString(R.string.list_music_suggestion_loading));
-            middle_txt.setText(mTitle);
-            lower_txt.setText(mArtist);
+            mUpperTxtView.setText(mContext.getResources().getString(R.string.list_music_suggestion_loading));
+            mMiddleTxtView.setText(mTitle);
+            mLowerTxViewt.setText(mArtist);
 
             // Show progress bar
             ProgressBar progressBar = mParentView.findViewById(R.id.list_music_progressBar);
@@ -130,16 +151,16 @@ public class ListMusicFragment extends BaseFragment {
         }
         // If the activity source is looking recently played spotify musics
         else if (SOURCE_SPOTIFY ==  mSource){
-            toolBarTitle = mContext.getResources().getString(R.string.txt_spotify);
+            mToolBarTitle = mContext.getResources().getString(R.string.txt_spotify);
 
             // Update layout text
-            upper_txt.setText(mContext.getResources().getString(R.string.list_music_txt_advice_spotify));
-            middle_txt.setText(mContext.getResources().getString(R.string.list_music_txt_advice_spotify_detail));
+            mUpperTxtView.setText(mContext.getResources().getString(R.string.list_music_txt_advice_spotify));
+            mMiddleTxtView.setText(mContext.getResources().getString(R.string.list_music_txt_advice_spotify_detail));
 
             // Show Spotify user
             SharedPreferences msharedPreferences = mContext.getSharedPreferences(DATA_SPOTIFY, 0);
-            lower_txt.setVisibility(View.VISIBLE);
-            lower_txt.setText(msharedPreferences.getString(SPOTIFY_USER_NAME, ""));
+            mLowerTxViewt.setVisibility(View.VISIBLE);
+            mLowerTxViewt.setText(msharedPreferences.getString(SPOTIFY_USER_NAME, ""));
 
             ImageView logout = mParentView.findViewById(R.id.list_music_spotify_logout);
             logout.setVisibility(View.VISIBLE);
@@ -168,7 +189,7 @@ public class ListMusicFragment extends BaseFragment {
         }
         // If the activity source is FAVORITES
         else if (SOURCE_FAVORITE == mSource){
-            toolBarTitle = mContext.getResources().getString(R.string.txt_favorite);
+            mToolBarTitle = mContext.getResources().getString(R.string.txt_favorite);
 
             // Read favorites from storage
             mListMusics = Utils.readFavoriteFromStorage(mContext);
@@ -178,9 +199,9 @@ public class ListMusicFragment extends BaseFragment {
             }
 
             // Update layout text
-            upper_txt.setText(mContext.getResources().getString(R.string.list_music_txt_advice_spotify));
-            middle_txt.setText(mContext.getResources().getString(R.string.txt_favorite));
-            lower_txt.setText(mArtist);
+            mUpperTxtView.setText(mContext.getResources().getString(R.string.list_music_txt_advice_spotify));
+            mMiddleTxtView.setText(mContext.getResources().getString(R.string.txt_favorite));
+            mLowerTxViewt.setText(mArtist);
 
 
             Collections.sort(mListMusics);
@@ -194,12 +215,12 @@ public class ListMusicFragment extends BaseFragment {
         }
         // DEFAUT CASE: read music from local Storage
         else {
-            toolBarTitle = mContext.getResources().getString(R.string.menu_list_musics_phone);
+            mToolBarTitle = mContext.getResources().getString(R.string.menu_list_musics_phone);
 
             // Update layout text
-            upper_txt.setVisibility(View.INVISIBLE);
-            middle_txt.setText(mContext.getResources().getString(R.string.list_music_txt_advice_local));
-            lower_txt.setVisibility(View.INVISIBLE);
+            mUpperTxtView.setVisibility(View.INVISIBLE);
+            mMiddleTxtView.setText(mContext.getResources().getString(R.string.list_music_txt_advice_local));
+            mLowerTxViewt.setVisibility(View.INVISIBLE);
 
             // Read music from telephone (artist and title) and update content from history
             mListMusics = Utils.updateLyrics(mContext, Utils.readSong(mContext));
@@ -212,18 +233,6 @@ public class ListMusicFragment extends BaseFragment {
             // Add listener on order button (title - artist)
             setUpMusicOrderListener(mListMusics, mParentView);
         }
-
-        Utils.setToolbarTitle(getActivity(), toolBarTitle);
-
-        return mParentView;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        // Cancel running task(s) to avoid memory leaks
-        if (mRunningTask != null)
-            mRunningTask.cancel(true);
     }
 
     private void setUpMusicOrderListener(List<Music> songList, View view){
@@ -308,19 +317,27 @@ public class ListMusicFragment extends BaseFragment {
                     editor.clear();
                     editor.apply();
 
-                    Navigation.findNavController(mParentView).popBackStack(R.id.HomeFragment, true);
+                    Navigation.findNavController(mParentView).popBackStack(R.id.HomeFragment, false);
                 })
                 .OnNegativeClicked(() -> {})
                 .build();
     }
 
 
-    static class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
+    @Override
+    public void onPause() {
+        if (mRunningTask != null) {
+            mRunningTask.cancel(true);
+        }
+        super.onPause();
+    }
+
+    static class SuggestionTask extends AsyncTask<Void, Void, String> {
         String song;
         String artist;
         private WeakReference<FragmentActivity> activityReference;
 
-        RetrieveFeedTask(String s, String a, FragmentActivity context){
+        SuggestionTask(String s, String a, FragmentActivity context){
             song = s.replace(" ", "%20");
             artist = a.replace(" ", "%20");
             activityReference = new WeakReference<>(context);
@@ -331,7 +348,7 @@ public class ListMusicFragment extends BaseFragment {
             try {
                 URL url = new URL(Parameters.ORION_API_URL_SUGGESTION + artist + "%20" + song + "&apikey=" + Parameters.ORION_API_KEY);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setConnectTimeout(Parameters.REQUEST_TIMEOUT);
+                urlConnection.setConnectTimeout(Parameters.REQUEST_TIMEOUT * 1000);
                 try {
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                     StringBuilder stringBuilder = new StringBuilder();
@@ -410,7 +427,7 @@ public class ListMusicFragment extends BaseFragment {
                             .setIcon(R.drawable.ic_pan_tool_black_24dp, Icon.Visible)
                             .OnPositiveClicked(() -> {
                                 NavController controller = Navigation.findNavController(view);
-                                controller.popBackStack();
+                                controller.popBackStack(R.id.HomeFragment, false);
                             })
                             .OnNegativeClicked(() -> {})
                             .build();

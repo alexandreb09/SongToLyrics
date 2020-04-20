@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.FragmentActivity;
+import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
@@ -23,6 +24,7 @@ import android.widget.TextView;
 
 import com.example.songtolyrics.R;
 import com.example.songtolyrics.Utils;
+import com.example.songtolyrics.controler.MainActivity;
 import com.example.songtolyrics.model.Music;
 import com.example.songtolyrics.model.ServerConfig;
 import com.google.gson.Gson;
@@ -75,6 +77,8 @@ public class RecordFragment extends BaseFragment implements View.OnClickListener
     private CountDownTimer countDownTimer;
     private Button recordButton;
 
+    private TestConnexionTask mTestConnexionTask;
+    private PythonAPITask mPythonAPITask;
 
     // Required empty public constructor
     public RecordFragment() {}
@@ -83,7 +87,8 @@ public class RecordFragment extends BaseFragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Check connexion
-        new TestConnexionTask(getActivity()).execute();
+        mTestConnexionTask = new TestConnexionTask(getActivity());
+        mTestConnexionTask.execute();
 
         // Set toolbar title
         String toolBarTitle = mContext.getResources().getString(R.string.menu_record);
@@ -140,6 +145,17 @@ public class RecordFragment extends BaseFragment implements View.OnClickListener
                 startStop();
                 break;
         }
+    }
+
+    @Override
+    public void onPause() {
+        if (mTestConnexionTask != null) {
+            mTestConnexionTask.cancel(true);
+        }
+        if (mPythonAPITask != null) {
+            mPythonAPITask.cancel(true);
+        }
+        super.onPause();
     }
 
     /**
@@ -207,8 +223,9 @@ public class RecordFragment extends BaseFragment implements View.OnClickListener
                 progressBarRecord.setVisibility(View.INVISIBLE);
                 progressBarRecognition.setVisibility(View.VISIBLE);
                 recordButton.setText(R.string.record_recognition_in_progress);
-                RetrieveFeedTask runningTask = new RetrieveFeedTask(getActivity());
-                runningTask.execute();
+                // Run task
+                mPythonAPITask = new PythonAPITask(getActivity());
+                mPythonAPITask.execute();
             }
         }.start();
     }
@@ -345,7 +362,10 @@ public class RecordFragment extends BaseFragment implements View.OnClickListener
                             NavDirections action = RecordFragmentDirections.actionReccordFragmentToSettingFragment();
                             Navigation.findNavController(view).navigate(action);
                         })
-                        .OnNegativeClicked(() -> Navigation.findNavController(view).popBackStack(R.id.HomeFragment, true))
+                        .OnNegativeClicked(() -> {
+                            NavController n = Navigation.findNavController(view);
+                            n.popBackStack(R.id.HomeFragment, false);
+                        })
                         .build();
                 }
             }
@@ -353,11 +373,11 @@ public class RecordFragment extends BaseFragment implements View.OnClickListener
     }
 
 
-    static class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
+    static class PythonAPITask extends AsyncTask<Void, Void, String> {
 
         private WeakReference<FragmentActivity> activityReference;
 
-        RetrieveFeedTask(FragmentActivity context){
+        PythonAPITask(FragmentActivity context){
             activityReference = new WeakReference<>(context);
         }
 

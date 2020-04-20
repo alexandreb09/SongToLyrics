@@ -121,4 +121,7 @@
     <string name="menu_spotify">@string/label_spotify</string>
     <string name="menu_record">Reconnaissance</string>
     <string name="menu_setting">Paramètres</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
