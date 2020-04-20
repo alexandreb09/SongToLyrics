@@ -3,28 +3,14 @@
     <string name="app_description">Projet Intégration</string>
     <string name="app_description_noms">Alexandre Bort - Ghita Lahlou - Xin Zhang</string>
 
-    <string name="homepage_title">Bienvenue!</string>
-    <string name="homepage_sub_title">Retrouvez facilement les paroles des vos chansons préférées.</string>
-    <string name="homepage_record">Reconnaître une chanson</string>
-    <string name="homepage_search_lyrics">Rechercher paroles</string>
-    <string name="homepage_btn_show_musics">Musiques locales</string>
-    <string name="homepage_record_search_lyrics">Enregistrer et cherche lyrics</string>
-    <string name="homepage_favoris">Favoris</string>
-    <string name="homepage_recherche_description">Effectuer une recherche depuis:</string>
-    <string name="homepage_spotify">Spotify</string>
-
     <string name="background_description">Image arrière plan</string>
     <string name="icon_favorite_description">Icone favoris</string>
     <string name="icon_delete_description">Icone supprimer</string>
-
-    <string name="history_txt_title">Historique</string>
-    <string name="history_txt_date">Date</string>
 
     <string name="list_music_txt_advice_local">Sélectionner une musique parmis les musiques de votre téléphone</string>
     <string name="list_music_txt_advice_suggestion">Sélectionner une musique parmi les suggestions:</string>
     <string name="list_music_txt_advice_spotify">Sélectionner une musique</string>
     <string name="list_music_txt_advice_spotify_detail">Vos dernières écoutes sur Spotify…</string>
-    <string name="list_music_txt_advice_favoris_detail">Vos musiques préférées…</string>
     <string name="list_music_suggestion_loading">Recherche de suggestions…</string>
     <string name="list_music_suggestion_not_found_title">Aucune suggestion trouvéee.</string>
     <string name="list_music_suggestion_not_found_msg">Veuillez reessayer avec une autre chanson et/ou artiste.</string>
@@ -55,16 +41,7 @@
     <string name="settings_server_IP_example">192.168.1.52</string>
     <string name="setting_https">HTTPS</string>
 
-    <string name="audio_reccord_reccord_start_btn">Enregistrer</string>
-    <string name="audio_reccord_reccord_end_btn">Fin</string>
-    <string name="audio_reccord_play_start_btn">Lire</string>
-    <string name="audio_reccord_play_end_btn">Arrêter</string>
-    <string name="audio_reccord_txt_not_found">Aucune musique correspondante n\'a été trouvée. Veuillez réessayer avec un enregistrement plus long (5s conseillé). Ou peut-être nous ne connaissons pas cette chanson.</string>
-
     <string name="search_lyrics_title">Quelle chanson cherches-tu ?</string>
-    <string name="search_lyrics_title_field">Entrez le titre de la chanson</string>
-    <string name="search_lyrics_author_field">Entrez le nom du chanteur</string>
-    <string name="search_lyrics_title_search_btn">Rechercher</string>
     <string name="search_lyrics_error_title_missing">Veuillez saisir le titre de la chanson</string>
     <string name="search_lyrics_error_author_missing">Veuillez saisir le nom de l\'artiste</string>
 
@@ -73,7 +50,6 @@
 
     <string name="not_found_title">Aucun musique trouvée</string>
     <string name="not_found_message">Veuillez vérifier le nom de l\'artiste et le nom de la chanson. Il est également possible que cette chanson ne soit pas dans notre base de données.</string>
-    <string name="not_found_image_description">Smiley image non trouvée</string>
     <string name="not_found_suggestions">@string/txt_suggestions</string>
 
     <string name="spotify_connect_error_login">La connexion au compte Spotify a été annulée. Veuillez vous connecter pour continuer.</string>
@@ -120,8 +96,4 @@
     <string name="menu_list_musics_favoris">Favoris</string>
     <string name="menu_spotify">@string/label_spotify</string>
     <string name="menu_record">Reconnaissance</string>
-    <string name="menu_setting">Paramètres</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

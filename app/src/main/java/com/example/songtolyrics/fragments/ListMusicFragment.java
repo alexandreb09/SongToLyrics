@@ -157,6 +157,10 @@ public class ListMusicFragment extends BaseFragment {
             mUpperTxtView.setText(mContext.getResources().getString(R.string.list_music_txt_advice_spotify));
             mMiddleTxtView.setText(mContext.getResources().getString(R.string.list_music_txt_advice_spotify_detail));
 
+            // Set background search
+            ImageView imageView = mParentView.findViewById(R.id.list_music_background);
+            imageView.setImageResource(R.drawable.background_search);
+
             // Show Spotify user
             SharedPreferences msharedPreferences = mContext.getSharedPreferences(DATA_SPOTIFY, 0);
             mLowerTxViewt.setVisibility(View.VISIBLE);

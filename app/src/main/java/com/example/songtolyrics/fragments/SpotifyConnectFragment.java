@@ -166,8 +166,4 @@ public class SpotifyConnectFragment extends BaseFragment {
         mButtonConnexion.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
 }

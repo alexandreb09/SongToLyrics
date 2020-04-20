@@ -24,7 +24,6 @@ import android.widget.TextView;
 
 import com.example.songtolyrics.R;
 import com.example.songtolyrics.Utils;
-import com.example.songtolyrics.controler.MainActivity;
 import com.example.songtolyrics.model.Music;
 import com.example.songtolyrics.model.ServerConfig;
 import com.google.gson.Gson;
@@ -47,8 +46,6 @@ import java.net.URLConnection;
 
 import static com.example.songtolyrics.Parameters.API_PYTHON_METHOD;
 import static com.example.songtolyrics.Parameters.API_PYTHON_METHOD_TEST_CONNEXION;
-import static com.example.songtolyrics.Parameters.API_PYTHON_PORT;
-import static com.example.songtolyrics.Parameters.API_PYTHON_URL;
 import static com.example.songtolyrics.Parameters.RECCORD_TIME;
 
 

@@ -33,7 +33,6 @@ import java.net.URLConnection;
 
 public class SettingFragment extends BaseFragment{
 
-    private View mParentView;
     private EditText mServerIP;
     private EditText mServerPort;
     private CheckBox mIsHTTPS;
@@ -48,7 +47,7 @@ public class SettingFragment extends BaseFragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mParentView = inflater.inflate(R.layout.fragment_setting, container, false);
+        View mParentView = inflater.inflate(R.layout.fragment_setting, container, false);
 
         // Set toolbar title
         String toolBarTitle = mContext.getResources().getString(R.string.label_setting);

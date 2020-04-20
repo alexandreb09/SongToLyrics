@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity{
                             .show();
                 }
                 else {
-                    Snackbar.make(parentView,R.string.autorisation_acces_memoire_refuse, Snackbar.LENGTH_LONG)
+                    Snackbar.make(parentView,R.string.autorisation_acces_memoire_refuse_detail, Snackbar.LENGTH_LONG)
                             .show();
                 }
             }
@@ -222,12 +222,12 @@ public class MainActivity extends AppCompatActivity{
                 navigateToRecord();
             } else {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO)){
-                    Snackbar.make(parentView, R.string.autorisation_acces_memoire_refuse, Snackbar.LENGTH_LONG)
+                    Snackbar.make(parentView, R.string.autorisation_acces_micro_refuse, Snackbar.LENGTH_LONG)
                             .setAction("Paramètres", view -> openParameters())
                             .show();
                 }
                 else {
-                    Snackbar.make(parentView, R.string.autorisation_acces_micro_refuse, Snackbar.LENGTH_LONG)
+                    Snackbar.make(parentView, R.string.autorisation_acces_micro_refuse_detail, Snackbar.LENGTH_LONG)
                             .show();
                 }
             }

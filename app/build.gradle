@@ -54,9 +54,9 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
 
     implementation "androidx.drawerlayout:drawerlayout:1.0.0"
-    implementation "androidx.navigation:navigation-runtime:2.2.1"
-    implementation "androidx.navigation:navigation-fragment-ktx:2.3.0-alpha04"
-    implementation "androidx.navigation:navigation-ui-ktx:2.3.0-alpha04"
+    implementation "androidx.navigation:navigation-runtime:2.2.2"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.3.0-alpha05"
+    implementation "androidx.navigation:navigation-ui-ktx:2.3.0-alpha05"
 
     // Fancy Alerts
     implementation 'com.github.Shashank02051997:FancyAlertDialog-Android:0.1'
